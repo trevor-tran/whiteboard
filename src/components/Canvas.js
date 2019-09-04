@@ -5,11 +5,18 @@ import '../css/Canvas.css'
 import { Context } from '../store/store'
 
 
-
 function Canvas() {
+  /**
+   * NOTE: I can remove current_path state, and store data as last element in paths state.
+   * if doing so, I need to have update paths state for every cursor move. Therefore, 
+   * the state is coppied many times ( the state contains arrays of hundreds of objects)
+   * 
+   */
   const { state } = useContext(Context)
   const [is_drawing, setIsDrawing] = useState(false)
-  const [dots, setDots] = useState([])
+  // const [paths, setPaths] = useState([])
+  // a path is a collection of dots when a mouse pressed down, moved, released. 
+  const [current_path, setCurrentPath] = useState([])
   const canvasRef = useRef(null)
 
 
@@ -18,37 +25,47 @@ function Canvas() {
     //https://stackoverflow.com/questions/10214873/make-canvas-as-wide-and-as-high-as-parent
     canvas.width = canvas.offsetWidth
     canvas.height = canvas.offsetHeight
-    const ctx = canvas.getContext('2d')
-    redraw(ctx)
-  }, [dots, state])
+  }, [])
 
-  const redraw = (ctx) => {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+  // draw a line from start to end
+  const drawLine = (ctx, start, end) => {
+    // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     ctx.strokeStyle = state.color
     ctx.lineWidth = state.width
-    if (dots.length !== 0) {
-      ctx.beginPath()
-      ctx.moveTo(dots[0].x, dots[0].y)
-      dots.forEach(dot => {
-        ctx.lineTo(dot.x, dot.y)
-        ctx.stroke()
-      })
+    ctx.beginPath()
+    ctx.moveTo(start.x, start.y)
+    ctx.lineTo(end.x, end.y)
+    ctx.closePath()
+    ctx.stroke()
+  }
+
+  // triggered when the mouse pressed down
+  // get current mouse location, and signal drawing has begun
+  const startDrawing = (e) => {
+    setIsDrawing(true)
+    console.log(current_path)
+    const canvas = canvasRef.current
+    let pos = getMousePos(canvas, e)
+    setCurrentPath(prev => [...prev, pos])
+  }
+
+  // draw lines to current mouse location
+  const draw = (e) => {
+    if (is_drawing) { 
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d')
+      if (current_path.length >= 2)
+      drawLine(ctx, current_path[current_path.length - 2], current_path[current_path.length - 1])
+      let pos = getMousePos(canvas, e)
+      setCurrentPath(prev => [...prev, pos])
     }
   }
 
-  const startDrawing = (e) => {
-    setIsDrawing(true)
-    const canvas = canvasRef.current
-    let pos = getMousePos(canvas, e)
-    setDots(prev => [...prev, pos])
-  }
-  const drawing = (e) => {
-    if (is_drawing) {
-      const canvas = canvasRef.current
-      let pos = getMousePos(canvas, e)
-      console.log(pos)
-      setDots(prev => [...prev, pos])
-    }
+  // signal drawing has stoped
+  const stopDrawing = () => {
+    setIsDrawing(false)
+    // setPaths(prev => [...prev, current_path])
+    setCurrentPath([])
   }
 
   // https://stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
@@ -61,15 +78,16 @@ function Canvas() {
   }
   return (
     <Paper className="canvas">
+     {console.log('render')}
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}
         onMouseDown={startDrawing}
-        onMouseMove={drawing}
-        onMouseUp={() => {setIsDrawing(false)}}
+        onMouseMove={draw}
+        onMouseUp={stopDrawing}
       />
     </Paper>
   )
 }
 
-export default Canvas
+export default React.memo(Canvas)
