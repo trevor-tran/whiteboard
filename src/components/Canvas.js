@@ -12,13 +12,12 @@ function Canvas() {
    * the state is coppied many times ( the state contains arrays of hundreds of objects)
    * 
    */
+  const canvasRef = useRef(null)
   const { state } = useContext(Context)
   const [is_drawing, setIsDrawing] = useState(false)
   // const [paths, setPaths] = useState([])
   // a path is a collection of dots when a mouse pressed down, moved, released. 
   const [current_path, setCurrentPath] = useState([])
-  const canvasRef = useRef(null)
-
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -35,7 +34,6 @@ function Canvas() {
     ctx.beginPath()
     ctx.moveTo(start.x, start.y)
     ctx.lineTo(end.x, end.y)
-    ctx.closePath()
     ctx.stroke()
   }
 
@@ -54,8 +52,9 @@ function Canvas() {
     if (is_drawing) { 
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
-      if (current_path.length >= 2)
-      drawLine(ctx, current_path[current_path.length - 2], current_path[current_path.length - 1])
+      if (current_path.length >= 2) {
+        drawLine(ctx, current_path[current_path.length - 2], current_path[current_path.length - 1])
+      }
       let pos = getMousePos(canvas, e)
       setCurrentPath(prev => [...prev, pos])
     }
