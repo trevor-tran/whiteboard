@@ -1,7 +1,5 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
-import { Paper } from '@material-ui/core'
 
-import '../css/Canvas.css'
 import { Context } from '../store/store'
 
 
@@ -76,7 +74,7 @@ function Canvas() {
     }
   }
   return (
-    <Paper className="canvas">
+    <div style={{width: '100v',height: '100vh',margin: 'auto',cursor:'pointer'}}>
      {console.log('render')}
       <canvas
         ref={canvasRef}
@@ -85,7 +83,7 @@ function Canvas() {
         onMouseMove={draw}
         onMouseUp={stopDrawing}
       />
-    </Paper>
+    </div>
   )
 }
 
