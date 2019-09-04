@@ -10,7 +10,7 @@ function Tool() {
     dispatch({ type: types.SET_COLOR, payload: color.hex })
   }
   return (
-    <Draggable>
+    <Draggable bounds='parent'>
       <div style={{display: "inline-flex"}}>
         <TwitterPicker
           color={state.color}
