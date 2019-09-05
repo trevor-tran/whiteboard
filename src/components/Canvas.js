@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
 
 import { Context } from '../store/store'
-
+import { types } from '../store/types'
 
 function Canvas() {
   /**
@@ -11,7 +11,7 @@ function Canvas() {
    * 
    */
   const canvasRef = useRef(null)
-  const { state } = useContext(Context)
+  const { state, dispatch } = useContext(Context)
   const [is_drawing, setIsDrawing] = useState(false)
   // const [paths, setPaths] = useState([])
   // a path is a collection of dots when a mouse pressed down, moved, released. 
@@ -23,6 +23,15 @@ function Canvas() {
     canvas.width = canvas.offsetWidth
     canvas.height = canvas.offsetHeight
   }, [])
+
+  useEffect(() => {
+    if (state.clear) {
+      const canvas = canvasRef.current
+      const ctx = canvas.getContext('2d')
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+      dispatch({ type: types.SET_CLEAR, payload: false })
+    }
+  }, [state.clear])
 
   // draw a line from start to end
   const drawLine = (ctx, start, end) => {
@@ -39,7 +48,6 @@ function Canvas() {
   // get current mouse location, and signal drawing has begun
   const startDrawing = (e) => {
     setIsDrawing(true)
-    console.log(current_path)
     const canvas = canvasRef.current
     let pos = getMousePos(canvas, e)
     setCurrentPath(prev => [...prev, pos])
@@ -47,7 +55,7 @@ function Canvas() {
 
   // draw lines to current mouse location
   const draw = (e) => {
-    if (is_drawing) { 
+    if (is_drawing) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       if (current_path.length >= 2) {
@@ -74,8 +82,10 @@ function Canvas() {
     }
   }
   return (
-    <div style={{width: '100v',height: '100vh',margin: 'auto',cursor:'pointer'}}>
-     {console.log('render')}
+    <div style={{
+      width: '100vw',
+      height: '100vh',
+      cursor: 'pointer'}}>
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}

@@ -3,7 +3,8 @@ import {types} from './types'
 
 export const initialState = {
   color: "#00000",
-  width: 2
+  width: 2,
+  clear: false
 }
 
 export function reducer (state, action) {
@@ -13,6 +14,8 @@ export function reducer (state, action) {
       return {...state, color: action.payload}
     case types.SET_WIDTH:
       return {...state, width: action.payload}
+    case types.SET_CLEAR:
+      return {...state, clear: action.payload}
     default:
       return initialState
   }

@@ -12,7 +12,7 @@ function Display() {
     <Context.Provider value={{ state, dispatch }}>
       <React.Fragment>
         <Tool />
-        <Canvas />
+        <Canvas/>
       </React.Fragment>
     </Context.Provider>
   )
