@@ -20,8 +20,8 @@ function Tool() {
         style={{ display: "inline-flex", backgroundColor: "white" }}>
         <TwitterPicker color={state.color} onChangeComplete={pickColor} />
         <div style={{ display: 'flex', flexDirection: "column" }}>
-          <Button style={{ margin: 'auto' }} variant="contained" onClick={clearDrawing}> Clear </Button>
-          <Button style={{ margin: 'auto' }} variant="contained" color="primary" onClick={clearDrawing}> Share </Button>
+          <Button style={{ margin: 'auto' }} variant="contained" color="secondary" onClick={clearDrawing}> Clear </Button>
+          <Button style={{ margin: 'auto' }} variant="contained" color="primary" > Share </Button>
         </div>
       </Paper>
     </Draggable>
