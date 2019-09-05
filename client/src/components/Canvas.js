@@ -13,8 +13,6 @@ function Canvas() {
    * the state is coppied many times ( the state contains arrays of hundreds of objects)
    * 
    */
-
-
   const canvasRef = useRef(null)
   const { state, dispatch } = useContext(Context)
   const [is_drawing, setIsDrawing] = useState(false)
@@ -42,10 +40,10 @@ function Canvas() {
 
   // send latest drawn dot to server using socket
   useEffect(() => {
-    if (current_path.length > 0){
-      socket.emit("dot",current_path[current_path.length-1])
+    if (state.room_code && current_path.length > 0){
+      socket.emit("package",{room: state.room_code, data: current_path[current_path.length-1]})
     }
-  },[current_path.length])
+  },[current_path.length, state.room_code])
 
   // draw a line from start to end
   const drawLine = (ctx, start, end) => {
