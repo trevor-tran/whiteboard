@@ -4,6 +4,8 @@ import { types } from '../store/types'
 
 import io from 'socket.io-client'
 
+const socket = io('http://localhost:8080')
+
 function Canvas() {
   /**
    * NOTE: I can remove current_path state, and store data as last element in paths state.
@@ -11,7 +13,7 @@ function Canvas() {
    * the state is coppied many times ( the state contains arrays of hundreds of objects)
    * 
    */
-  const socket = io('http://localhost:8080')
+
 
   const canvasRef = useRef(null)
   const { state, dispatch } = useContext(Context)
@@ -20,6 +22,7 @@ function Canvas() {
   // a path is a collection of dots when a mouse pressed down, moved, released. 
   const [current_path, setCurrentPath] = useState([])
 
+  // make canvas wider
   useEffect(() => {
     const canvas = canvasRef.current
     //https://stackoverflow.com/questions/10214873/make-canvas-as-wide-and-as-high-as-parent
@@ -27,6 +30,7 @@ function Canvas() {
     canvas.height = canvas.offsetHeight
   }, [])
 
+  // clear canvas
   useEffect(() => {
     if (state.clear) {
       const canvas = canvasRef.current
@@ -35,6 +39,13 @@ function Canvas() {
       dispatch({ type: types.SET_CLEAR, payload: false })
     }
   }, [state.clear])
+
+  // send latest drawn dot to server using socket
+  useEffect(() => {
+    if (current_path.length > 0){
+      socket.emit("dot",current_path[current_path.length-1])
+    }
+  },[current_path.length])
 
   // draw a line from start to end
   const drawLine = (ctx, start, end) => {

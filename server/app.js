@@ -11,8 +11,11 @@ const server = http.createServer(app);
 const io = socket(server);
 
 //Whenever someone connects this gets executed
-io.on('connection', () => {
+io.on('connection', (socket) => {
   console.log('A user connected')
+  socket.on("dot", data => {
+    console.log(data)
+  })
 });
 
 
