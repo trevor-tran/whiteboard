@@ -17,18 +17,26 @@ function Tool() {
   return (
     <Draggable bounds='parent'>
       <Paper
-        style={{display: "inline-flex", backgroundColor: "white" }}>
+        style={{ display: "inline-flex", backgroundColor: "white" }}>
         <TwitterPicker
           color={state.color}
           onChangeComplete={pickColor}
         />
-        <Button
-          style={{ margin: 'auto' }}
-          variant="contained"
-          color="primary"
-          className="Clear"
-          onClick={clearDrawing}
-        > Clear </Button>
+        <div style={{display:'flex', flexDirection:"column"}}>
+          <Button
+            style={{ margin: 'auto' }}
+            variant="contained"
+            className="Clear"
+            onClick={clearDrawing}
+          > Clear </Button>
+          <Button
+            style={{ margin: 'auto' }}
+            variant="contained"
+            color="primary"
+            className="Clear"
+            onClick={clearDrawing}
+          > Share </Button>
+        </div>
       </Paper>
     </Draggable>
   )
