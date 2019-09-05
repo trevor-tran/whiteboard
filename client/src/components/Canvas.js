@@ -34,16 +34,33 @@ function Canvas() {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+      // TODO: because of this dispatch, two emits fired due to state.clear change
       dispatch({ type: types.SET_CLEAR, payload: false })
     }
   }, [state.clear])
 
-  // send latest drawn dot to server using socket
+  // responsible for emitting a drawn dot to server socket
   useEffect(() => {
-    if (state.room_code && current_path.length > 0){
-      socket.emit("package",{room: state.room_code, data: current_path[current_path.length-1]})
+    if (state.room_code) {
+      if (current_path.length > 0) {
+        socket.emit("package", { room: state.room_code, msg: current_path[current_path.length - 1] })
+      }
     }
-  },[current_path.length, state.room_code])
+  }, [current_path.length])
+
+  // responsible for emitting a state (global state) to server socket
+  useEffect(() => {
+    if (state.room_code) {
+      socket.emit("package", { room: state.room_code, msg: state })
+    }
+  }, [state])
+
+  //listening on server socket
+  useEffect(() => {
+    socket.on(state.room_code, payload => {
+      console.log(payload)
+    })
+  })
 
   // draw a line from start to end
   const drawLine = (ctx, start, end) => {
@@ -97,7 +114,8 @@ function Canvas() {
     <div style={{
       width: '100%',
       height: '100%',
-      cursor: 'pointer'}}>
+      cursor: 'pointer'
+    }}>
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}
