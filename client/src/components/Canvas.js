@@ -1,7 +1,8 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
-
 import { Context } from '../store/store'
 import { types } from '../store/types'
+
+import io from 'socket.io-client'
 
 function Canvas() {
   /**
@@ -10,6 +11,8 @@ function Canvas() {
    * the state is coppied many times ( the state contains arrays of hundreds of objects)
    * 
    */
+  const socket = io('http://localhost:8080')
+
   const canvasRef = useRef(null)
   const { state, dispatch } = useContext(Context)
   const [is_drawing, setIsDrawing] = useState(false)

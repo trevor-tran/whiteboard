@@ -7,19 +7,18 @@ app.use(express.json());
 
 // listening port
 const PORT = process.env.PORT || 8080;
-
 const server = http.createServer(app);
+const io = socket(server);
+
+//Whenever someone connects this gets executed
+io.on('connection', () => {
+  console.log('A user connected')
+});
+
 
 server.listen(PORT, ()=>{
   console.log(`Listening on port ${PORT}`);
 });
-
-app.get('/test', (req, res) => {
-  res.json({
-    message: err.message,
-    error: err
-  })
-})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
