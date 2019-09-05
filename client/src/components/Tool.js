@@ -18,24 +18,10 @@ function Tool() {
     <Draggable bounds='parent'>
       <Paper
         style={{ display: "inline-flex", backgroundColor: "white" }}>
-        <TwitterPicker
-          color={state.color}
-          onChangeComplete={pickColor}
-        />
-        <div style={{display:'flex', flexDirection:"column"}}>
-          <Button
-            style={{ margin: 'auto' }}
-            variant="contained"
-            className="Clear"
-            onClick={clearDrawing}
-          > Clear </Button>
-          <Button
-            style={{ margin: 'auto' }}
-            variant="contained"
-            color="primary"
-            className="Clear"
-            onClick={clearDrawing}
-          > Share </Button>
+        <TwitterPicker color={state.color} onChangeComplete={pickColor} />
+        <div style={{ display: 'flex', flexDirection: "column" }}>
+          <Button style={{ margin: 'auto' }} variant="contained" onClick={clearDrawing}> Clear </Button>
+          <Button style={{ margin: 'auto' }} variant="contained" color="primary" onClick={clearDrawing}> Share </Button>
         </div>
       </Paper>
     </Draggable>
