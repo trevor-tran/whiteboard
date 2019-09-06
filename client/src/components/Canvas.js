@@ -39,32 +39,34 @@ function Canvas() {
     }
   }, [state.clear])
 
-  // responsible for emitting a drawn dot to server socket
-  useEffect(() => {
-    if (state.room_code) {
-      if (current_path.length > 0) {
-        socket.emit("package", { room: state.room_code, msg: current_path[current_path.length - 1] })
-      }
-    }
-  }, [current_path.length])
-
-  // responsible for emitting a state (global state) to server socket
-  useEffect(() => {
-    if (state.room_code) {
-      socket.emit("package", { room: state.room_code, msg: state })
-    }
-  }, [state])
+  // useEffect(() => {
+  //   console.log("here")
+  //   if (state.room_code) {
+  //     socket.emit("package", { state: state, points: [] })
+  //   }
+  // }, [state])
 
   //listening on server socket
   useEffect(() => {
-    socket.on(state.room_code, payload => {
-      console.log(payload)
-    })
+    if (state.room_code) {
+      socket.on(state.room_code, data => {
+        console.log(data)
+        const canvas = canvasRef.current
+        const ctx = canvas.getContext('2d')
+        if (!data.points.length) {
+          dispatch({ type: types.ALL, payload: data.state })
+        } else {
+          for (let i = 0; i < data.points.length; i++)
+            if (data.points[i + 1]) {
+              drawLine(ctx, data.points[i], data.points[i + 1])
+            }
+        }
+      })
+    }
   })
 
   // draw a line from start to end
   const drawLine = (ctx, start, end) => {
-    // ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
     ctx.strokeStyle = state.color
     ctx.lineWidth = state.width
     ctx.beginPath()
@@ -97,8 +99,12 @@ function Canvas() {
 
   // signal drawing has stoped
   const stopDrawing = () => {
+    if (state.room_code) {
+      // only emit when a path finished
+      console.log("sent")
+      socket.emit("package", { state: state, points: current_path })
+    }
     setIsDrawing(false)
-    // setPaths(prev => [...prev, current_path])
     setCurrentPath([])
   }
 

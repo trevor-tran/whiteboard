@@ -19,6 +19,8 @@ export function reducer (state, action) {
     case types.SET_ROOM_CODE:
       console.log(action.payload)
       return {...state, room_code: action.payload}
+    case types.ALL:
+      return action.payload
     default:
       return initialState
   }
