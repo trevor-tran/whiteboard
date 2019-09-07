@@ -40,7 +40,7 @@ function Canvas() {
     // only listening if there is a sharing canvas
     if (state.room) {
       socket.on(state.room, data => {
-        console.log(data)
+        console.log("this console in Canvas.js around line 43", data)
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
           for (let i = 0; i < data.points.length; i++)
@@ -87,7 +87,6 @@ function Canvas() {
   const stopDrawing = () => {
     if (state.room) {
       // only emit when a path finished
-      console.log("sent")
       socket.emit("package", { state: state, points: current_path })
     }
     setIsDrawing(false)
