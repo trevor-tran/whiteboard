@@ -15,7 +15,7 @@ io.on('connection', (socket) => {
   console.log('A user connected')
   socket.on("package", data => {
     console.log(data)
-    socket.broadcast.emit(data.state.room_code, data)
+    socket.broadcast.emit(data.state.room, data)
   })
 });
 

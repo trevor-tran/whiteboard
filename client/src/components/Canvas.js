@@ -41,15 +41,15 @@ function Canvas() {
 
   // useEffect(() => {
   //   console.log("here")
-  //   if (state.room_code) {
+  //   if (state.room) {
   //     socket.emit("package", { state: state, points: [] })
   //   }
   // }, [state])
 
   //listening on server socket
   useEffect(() => {
-    if (state.room_code) {
-      socket.on(state.room_code, data => {
+    if (state.room) {
+      socket.on(state.room, data => {
         console.log(data)
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
@@ -99,7 +99,7 @@ function Canvas() {
 
   // signal drawing has stoped
   const stopDrawing = () => {
-    if (state.room_code) {
+    if (state.room) {
       // only emit when a path finished
       console.log("sent")
       socket.emit("package", { state: state, points: current_path })

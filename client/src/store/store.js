@@ -5,7 +5,7 @@ export const initialState = {
   color: "#00000",
   width: 2,
   clear: false,
-  room_code: ""
+  room: ""
 }
 
 export function reducer (state, action) {
@@ -16,9 +16,9 @@ export function reducer (state, action) {
       return {...state, width: action.payload}
     case types.SET_CLEAR:
       return {...state, clear: action.payload}
-    case types.SET_ROOM_CODE:
+    case types.SET_ROOM:
       console.log(action.payload)
-      return {...state, room_code: action.payload}
+      return {...state, room: action.payload}
     case types.ALL:
       return action.payload
     default:
