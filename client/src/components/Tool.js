@@ -19,8 +19,11 @@ import randomstring from 'randomstring'
 
 
 function Tool() {
+   // this is global state. Go to ../store/store.js to see what state is available 
   const { state, dispatch } = useContext(Context)
-  const [roomCode, setRoomCode] = useState("")
+  // room code user enters into the HTML Input tag
+  const [roomCode, setRoomCode] = useState("")  
+  // open/close dialog
   const [open, setOpen] = useState(false)
 
   const pickColor = (color, event) => {

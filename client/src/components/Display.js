@@ -7,6 +7,7 @@ import Tool from './Tool'
 import Canvas from './Canvas'
 
 function Display() {
+  
   const [state, dispatch] = useReducer(reducer, initialState)
   return (
     <Context.Provider value={{ state, dispatch }}>

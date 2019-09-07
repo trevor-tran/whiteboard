@@ -4,21 +4,18 @@ import { types } from '../store/types'
 
 import io from 'socket.io-client'
 
-const socket = io('http://localhost:8080')
+const socket = io('http://0.0.0.0:8080')
 
 function Canvas() {
-  /**
-   * NOTE: I can remove current_path state, and store data as last element in paths state.
-   * if doing so, I need to have update paths state for every cursor move. Therefore, 
-   * the state is coppied many times ( the state contains arrays of hundreds of objects)
-   * 
-   */
+
   const canvasRef = useRef(null)
+  // this is global state. Go to ../store/store.js to see what state is available 
   const { state, dispatch } = useContext(Context)
+  // is user drawing?
   const [is_drawing, setIsDrawing] = useState(false)
-  // const [paths, setPaths] = useState([])
-  // a path is a collection of dots when a mouse pressed down, moved, released. 
+  // the current path. a path is defined when user press the mouse, drag, and release.
   const [current_path, setCurrentPath] = useState([])
+
 
   // make canvas wider
   useEffect(() => {
@@ -34,32 +31,21 @@ function Canvas() {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
-      // TODO: because of this dispatch, two emits fired due to state.clear change
       dispatch({ type: types.SET_CLEAR, payload: false })
     }
   }, [state.clear])
 
-  // useEffect(() => {
-  //   console.log("here")
-  //   if (state.room) {
-  //     socket.emit("package", { state: state, points: [] })
-  //   }
-  // }, [state])
-
   //listening on server socket
   useEffect(() => {
+    // only listening if there is a sharing canvas
     if (state.room) {
       socket.on(state.room, data => {
         console.log(data)
         const canvas = canvasRef.current
         const ctx = canvas.getContext('2d')
-        if (!data.points.length) {
-          dispatch({ type: types.ALL, payload: data.state })
-        } else {
           for (let i = 0; i < data.points.length; i++)
             if (data.points[i + 1]) {
               drawLine(ctx, data.points[i], data.points[i + 1])
-            }
         }
       })
     }
