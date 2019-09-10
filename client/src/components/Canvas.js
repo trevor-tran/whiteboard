@@ -39,14 +39,16 @@ function Canvas() {
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
+
     socket.on(state.room, data => {
       console.log(data)
+      dispatch({ type: types.SET_COLOR, payload: data.state.color })
+      console.log("color in store before draw:", state.color)
       for (let i = 0; i < data.points.length; i++)
         if (data.points[i + 1]) {
           drawLine(ctx, data.points[i], data.points[i + 1])
         }
     })
-    console.log("registered")
   }, [state.room])
 
   // draw a line from start to end
@@ -101,11 +103,8 @@ function Canvas() {
   }
 
   return (
-    <div style={{
-      width: '100%',
-      height: '100%',
-      cursor: 'pointer'
-    }}>
+    <div style={{ width: '100%vw', height: '100vh', cursor: 'pointer' }}>
+      {console.log("re-rendered")}
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}
