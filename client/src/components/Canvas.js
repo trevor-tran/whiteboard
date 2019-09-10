@@ -37,19 +37,17 @@ function Canvas() {
 
   //listening on server socket
   useEffect(() => {
-    // only listening if there is a sharing canvas
-    if (state.room) {
-      socket.on(state.room, data => {
-        console.log("this console in Canvas.js around line 43", data)
-        const canvas = canvasRef.current
-        const ctx = canvas.getContext('2d')
-          for (let i = 0; i < data.points.length; i++)
-            if (data.points[i + 1]) {
-              drawLine(ctx, data.points[i], data.points[i + 1])
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d')
+    socket.on(state.room, data => {
+      console.log(data)
+      for (let i = 0; i < data.points.length; i++)
+        if (data.points[i + 1]) {
+          drawLine(ctx, data.points[i], data.points[i + 1])
         }
-      })
-    }
-  })
+    })
+    console.log("registered")
+  }, [state.room])
 
   // draw a line from start to end
   const drawLine = (ctx, start, end) => {
@@ -101,6 +99,7 @@ function Canvas() {
       y: evt.clientY - rect.top
     }
   }
+
   return (
     <div style={{
       width: '100%',
