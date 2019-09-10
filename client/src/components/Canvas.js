@@ -96,6 +96,13 @@ function Canvas() {
   // https://stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
   function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
+    if (evt.changedTouches) {
+      return {
+        x: evt.changedTouches[0].clientX - rect.left,
+        y: evt.changedTouches[0].clientY - rect.top
+      }
+    }
+
     return {
       x: evt.clientX - rect.left,
       y: evt.clientY - rect.top
@@ -103,7 +110,7 @@ function Canvas() {
   }
 
   return (
-    <div style={{ width: '100%vw', height: '100vh', cursor: 'pointer' }}>
+    <div style={{ width: '100%vw', height: '100vh', cursor: 'pointer'}}>
       {console.log("re-rendered")}
       <canvas
         ref={canvasRef}
@@ -111,6 +118,9 @@ function Canvas() {
         onMouseDown={startDrawing}
         onMouseMove={draw}
         onMouseUp={stopDrawing}
+        onTouchStart={startDrawing}
+        onTouchMove={draw}
+        onTouchEnd={stopDrawing}
       />
     </div>
   )

@@ -13,7 +13,7 @@ function Display() {
     <Context.Provider value={{ state, dispatch }}>
       <React.Fragment>
         <Tool />
-        <Canvas/>
+        <Canvas style={{overflow:'hidden'}}/>
       </React.Fragment>
     </Context.Provider>
   )
