@@ -57,7 +57,7 @@ function Tool() {
   return (
     <React.Fragment>
     <Draggable bounds='parent'>
-      <Paper style={{ display: "inline-flex", backgroundColor: "white", flexDirection: "column" }}>
+      <Paper style={{position:"absolute", display: "inline-flex", backgroundColor: "white", flexDirection: "column" }}>
         <TwitterPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
         <div style={{ display: 'flex', flexDirection: "column" }}>
           <Tooltip title="Clear Canvas">

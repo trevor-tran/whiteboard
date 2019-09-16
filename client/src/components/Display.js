@@ -16,7 +16,6 @@ function Display() {
 
   const [showTool, setShowTool] = useState(false)
   const IsDesktop = useMediaQuery({ minWidth: 1024 })
-  const IsMobile = useMediaQuery({ maxWidth: 1024 })
 
   return (
     <Context.Provider value={{ state, dispatch }}>

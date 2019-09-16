@@ -33,7 +33,7 @@ function Canvas() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       dispatch({ type: types.SET_CLEAR, payload: false })
     }
-  }, [state.clear])
+  }, [state.clear, dispatch])
 
   //listening on server socket
   useEffect(() => {
