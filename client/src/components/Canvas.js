@@ -44,6 +44,7 @@ function Canvas() {
       console.log(data)
       dispatch({ type: types.SET_COLOR, payload: data.state.color })
       console.log("color in store before draw:", state.color)
+      ctx.strokeStyle = data.state.color
       for (let i = 0; i < data.points.length; i++)
         if (data.points[i + 1]) {
           drawLine(ctx, data.points[i], data.points[i + 1])
@@ -53,7 +54,7 @@ function Canvas() {
 
   // draw a line from start to end
   const drawLine = (ctx, start, end) => {
-    ctx.strokeStyle = state.color
+    // ctx.strokeStyle = state.color
     ctx.lineWidth = state.width
     ctx.beginPath()
     ctx.moveTo(start.x, start.y)
@@ -75,6 +76,7 @@ function Canvas() {
     if (is_drawing) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
+      ctx.strokeStyle = state.color
       if (current_path.length >= 2) {
         drawLine(ctx, current_path[current_path.length - 2], current_path[current_path.length - 1])
       }
