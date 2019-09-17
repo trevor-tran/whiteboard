@@ -10,7 +10,8 @@ import { Button, Paper, Input, Tooltip } from '@material-ui/core'
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
 
 //icons
-import DeleteIcon from '@material-ui/icons/Delete';
+import EraserIcon from '@material-ui/icons/Clear';
+import DeleteIcon from '@material-ui/icons/DeleteForever';
 import ScreenShareIcon from '@material-ui/icons/ScreenShare'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 
@@ -59,12 +60,18 @@ function Tool() {
     <Draggable bounds='parent'>
       <Paper style={{position:"absolute", display: "inline-flex", backgroundColor: "white", flexDirection: "column" }}>
         <TwitterPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
-        <div style={{ display: 'flex', flexDirection: "column" }}>
+        <div style={{ display: 'flex', flexDirection: "row" }}>
           <Tooltip title="Clear Canvas">
             <Button
               variant="contained" color="secondary"
               onClick={clearDrawing}
             > <DeleteIcon /> </Button>
+          </Tooltip>
+          <Tooltip title="Eraser">
+            <Button
+              variant="contained" color="default"
+              onClick={clearDrawing}
+            > <EraserIcon /> </Button>
           </Tooltip>
         </div>
         <div style={{ display: 'flex', flexDirection: "row" }}>
