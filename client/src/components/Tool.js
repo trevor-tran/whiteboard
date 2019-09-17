@@ -4,7 +4,7 @@ import { Context } from '../store/store';
 import { types } from '../store/types'
 
 // components
-import { TwitterPicker } from 'react-color'
+import { GithubPicker } from 'react-color'
 import Draggable from 'react-draggable';
 import { Button, Paper, Input, Tooltip } from '@material-ui/core'
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
@@ -54,12 +54,16 @@ function Tool() {
   const closeDialog = () => {
     setOpen(false)
   }
+  const erase = () => {
+    dispatch({type: types.SET_ERASER})
+  }
 
   return (
     <React.Fragment>
     <Draggable bounds='parent'>
       <Paper style={{position:"absolute", display: "inline-flex", backgroundColor: "white", flexDirection: "column" }}>
-        <TwitterPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
+        {/* <TwitterPicker triangle="hide" color={state.color} onChangeComplete={pickColor} /> */}
+        <GithubPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
         <div style={{ display: 'flex', flexDirection: "row" }}>
           <Tooltip title="Clear Canvas">
             <Button
@@ -70,7 +74,7 @@ function Tool() {
           <Tooltip title="Eraser">
             <Button
               variant="contained" color="default"
-              onClick={clearDrawing}
+              onClick={erase}
             > <EraserIcon /> </Button>
           </Tooltip>
         </div>

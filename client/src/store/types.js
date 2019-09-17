@@ -3,5 +3,6 @@ export const types = {
   SET_WIDTH: "SET_WIDTH",
   SET_CLEAR: "SET_CLEAR",
   SET_ROOM: "SET_ROOM",
+  SET_ERASER: "SET_ERASER",
   ALL: "ALL"
 }

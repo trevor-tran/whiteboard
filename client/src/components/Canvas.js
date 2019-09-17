@@ -2,9 +2,6 @@ import React, { useRef, useState, useContext, useEffect } from 'react'
 import { Context } from '../store/store'
 import { types } from '../store/types'
 
-//css
-import './Canvas.css'
-
 import io from 'socket.io-client'
 
 const socket = io('http://0.0.0.0:8080')
@@ -115,7 +112,7 @@ function Canvas() {
   }
 
   return (
-    <div className='canvas'>
+    <div className='canvas'   style={{width:"100vw", height: "100vh",  cursor: "pointer"}}>
       {console.log("re-rendered")}
       <canvas
         ref={canvasRef}
@@ -127,6 +124,10 @@ function Canvas() {
         onTouchMove={draw}
         onTouchEnd={stopDrawing}
       />
+      <div id="follower">
+  <div id="circle1"></div>
+  <div id="circle2"></div>
+</div>
     </div>
   )
 }

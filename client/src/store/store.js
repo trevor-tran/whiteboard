@@ -2,7 +2,7 @@ import React from 'react'
 import {types} from './types'
 
 export const initialState = {
-  color: "#000000",
+  color: "#B80000",
   width: 2,
   clear: false,
   room: ""
@@ -19,6 +19,8 @@ export function reducer (state, action) {
       return {...state, clear: action.payload}
     case types.SET_ROOM:
       return {...state, room: action.payload}
+    case types.SET_ERASER:
+      return {...state, color:"#ffffff", width: 20}
     // case types.ALL:
     //   // console.log(action.payload)
     //   return {...state, color: action.payload.color, width: action.payload.width}
