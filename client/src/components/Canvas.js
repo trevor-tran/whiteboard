@@ -2,6 +2,9 @@ import React, { useRef, useState, useContext, useEffect } from 'react'
 import { Context } from '../store/store'
 import { types } from '../store/types'
 
+//css
+import './Canvas.css'
+
 import io from 'socket.io-client'
 
 const socket = io('http://0.0.0.0:8080')
@@ -23,7 +26,6 @@ function Canvas() {
     //https://stackoverflow.com/questions/10214873/make-canvas-as-wide-and-as-high-as-parent
     canvas.width = canvas.offsetWidth
     canvas.height = canvas.offsetHeight
-    makeCircle()
   }, [])
 
   // clear canvas
@@ -96,14 +98,6 @@ function Canvas() {
     setCurrentPath([])
   }
 
-  const makeCircle = () => {
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext('2d')
-    ctx.beginPath()
-    ctx.arc(100,100, 50, 0, 2 * Math.PI)
-    ctx.stroke()
-  }
-
   // https://stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
   function getMousePos(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
@@ -121,7 +115,7 @@ function Canvas() {
   }
 
   return (
-    <div style={{ width: '100%vw', height: '100vh', cursor: 'pointer'}}>
+    <div className='canvas'>
       {console.log("re-rendered")}
       <canvas
         ref={canvasRef}
