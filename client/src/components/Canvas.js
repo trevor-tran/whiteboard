@@ -3,7 +3,7 @@ import { Context } from '../store/store'
 import { types } from '../store/types'
 
 import io from 'socket.io-client'
-import { server } from '../consts'
+import { server, CanvasConsts } from '../consts'
 
 const socket = io(server.PROTOCOL + server.DOMAIN + ":" + server.PORT)
 
@@ -33,6 +33,7 @@ function Canvas() {
       const ctx = canvas.getContext('2d')
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       dispatch({ type: types.SET_CLEAR, payload: false })
+      socket.emit(CanvasConsts.BROADCAST, { state: state, points: [] })
     }
   }, [state.clear, dispatch])
 
@@ -42,10 +43,15 @@ function Canvas() {
     const ctx = canvas.getContext('2d')
 
     socket.on(state.room, data => {
-      dispatch({ type: types.SET_COLOR, payload: data.state.color })
+      if (data.state.clear) {
+        // clear the entire canvas
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
+      }
+
+      // set color and width which are sent from the host (who shares the canvas)
       ctx.strokeStyle = data.state.color
       ctx.lineWidth = data.state.width
-      // dispatch
+
       for (let i = 0; i < data.points.length; i++)
         if (data.points[i + 1]) {
           drawLine(ctx, data.points[i], data.points[i + 1])
@@ -55,8 +61,6 @@ function Canvas() {
 
   // draw a line from start to end
   const drawLine = (ctx, start, end) => {
-    // ctx.strokeStyle = state.color
-    // ctx.lineWidth = state.width
     ctx.beginPath()
     ctx.moveTo(start.x, start.y)
     ctx.lineTo(end.x, end.y)
@@ -64,7 +68,7 @@ function Canvas() {
   }
 
   // triggered when the mouse pressed down
-  // get current mouse location, and signal drawing has begun
+  // get current mouse's location, and signal drawing has begun
   const startDrawing = (e) => {
     setIsDrawing(true)
     const canvas = canvasRef.current
@@ -77,6 +81,7 @@ function Canvas() {
     if (is_drawing) {
       const canvas = canvasRef.current
       const ctx = canvas.getContext('2d')
+      // make sure using local color and width when drawing
       ctx.strokeStyle = state.color
       ctx.lineWidth = state.width
       if (current_path.length >= 2) {
@@ -91,7 +96,7 @@ function Canvas() {
   const stopDrawing = () => {
     if (state.room) {
       // only emit when a path finished
-      socket.emit("package", { state: state, points: current_path })
+      socket.emit(CanvasConsts.BROADCAST, { state: state, points: current_path })
     }
     setIsDrawing(false)
     setCurrentPath([])
