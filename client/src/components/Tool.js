@@ -44,14 +44,14 @@ function Tool() {
   // generate and update room code in global state
   const handleShare = () => {
     let code = randomstring.generate({ length: ToolConsts.ROOM_LENGTH, charset: ToolConsts.CHARSET })
-    updateRoomCode(code)
+    dispatch({ type: types.SET_ROOM, payload: code })
     setOpen(true)
   }
 
-  const updateRoomCode = (value = roomCode) => {
-    if (value) {
+  const handleRoomInput = () => {
+    if (roomCode) {
       alert("Ok:)")
-      dispatch({ type: types.SET_ROOM, payload: value })
+      dispatch({ type: types.SET_ROOM, payload: roomCode })
     }
   }
 
@@ -113,7 +113,7 @@ function Tool() {
                 style={{ marginRight: '1%' }}
                 variant="contained"
                 color="primary"
-                onClick={() => updateRoomCode()}
+                onClick={handleRoomInput}
               > <MeetingRoomIcon /> </Button>
             </Tooltip>
             <Input

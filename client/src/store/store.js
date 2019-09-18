@@ -11,7 +11,6 @@ export const initialState = {
 export function reducer (state, action) {
   switch (action.type) {
     case types.SET_COLOR:
-      console.log("color in store:" + action.payload)
       return {...state, color: action.payload}
     case types.SET_WIDTH:
       return {...state, width: action.payload}
