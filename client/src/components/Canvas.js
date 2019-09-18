@@ -3,8 +3,9 @@ import { Context } from '../store/store'
 import { types } from '../store/types'
 
 import io from 'socket.io-client'
+import { server } from '../consts'
 
-const socket = io('http://0.0.0.0:8080')
+const socket = io(server.PROTOCOL + server.DOMAIN + ":" + server.PORT)
 
 function Canvas() {
 
@@ -113,7 +114,6 @@ function Canvas() {
 
   return (
     <div className='canvas'   style={{width:"100vw", height: "100vh",  cursor: "pointer"}}>
-      {console.log("re-rendered")}
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}

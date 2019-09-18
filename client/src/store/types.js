@@ -4,5 +4,6 @@ export const types = {
   SET_CLEAR: "SET_CLEAR",
   SET_ROOM: "SET_ROOM",
   SET_ERASER: "SET_ERASER",
+  SET_PEN: "SET_PEN",
   ALL: "ALL"
 }

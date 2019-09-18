@@ -20,7 +20,9 @@ export function reducer (state, action) {
     case types.SET_ROOM:
       return {...state, room: action.payload}
     case types.SET_ERASER:
-      return {...state, color:"#ffffff", width: 20}
+      return {...state, color:"#ffffff", width: 50}
+    case types.SET_PEN:
+      return {...state, color: action.payload.color, width: action.payload.width}
     // case types.ALL:
     //   // console.log(action.payload)
     //   return {...state, color: action.payload.color, width: action.payload.width}
