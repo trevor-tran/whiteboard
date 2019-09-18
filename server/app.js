@@ -13,7 +13,7 @@ const io = socket(server);
 //Whenever someone connects this gets executed
 io.on('connection', (socket) => {
   // console.log('A user connected')
-  socket.on("package", data => {
+  socket.on("broadcast", data => {
     // console.log(data)
     socket.broadcast.emit(data.state.room, data)
   })
