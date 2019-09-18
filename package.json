@@ -2,9 +2,11 @@
   "name": "server",
   "version": "0.0.0",
   "private": true,
+  "main": "server.js",
   "scripts": {
-    "start": "node app.js",
-    "start-dev": "nodemon app.js"
+    "server-start": "node app.js",
+    "client-install": "npm install --prefix ./client",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm run client-install && npm run build --prefix ./client"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",

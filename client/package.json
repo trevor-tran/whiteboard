@@ -1,8 +1,11 @@
 {
-  "homepage": "http://phuongdtran.github.io/drawing",
   "name": "drawing",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "npm": "6.9.0",
+    "node": "12.4.0"
+  },
   "dependencies": {
     "@material-ui/core": "^4.4.0",
     "@material-ui/icons": "^4.2.1",
