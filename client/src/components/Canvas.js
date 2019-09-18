@@ -5,7 +5,7 @@ import { types } from '../store/types'
 import io from 'socket.io-client'
 import { server, CanvasConsts } from '../consts'
 
-const socket = io(server.PROTOCOL + server.DOMAIN + ":" + server.PORT)
+const socket = io(server.URL)
 
 function Canvas() {
 

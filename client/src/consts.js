@@ -1,7 +1,5 @@
 export const server = {
-  PROTOCOL: 'http://',
-  DOMAIN: "0.0.0.0",
-  PORT: "8080"
+  URL:"http://157.245.184.14"
 }
 
 export const ToolConsts = {
