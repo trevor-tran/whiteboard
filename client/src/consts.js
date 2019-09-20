@@ -1,5 +1,5 @@
 export const server = {
-  URL:"http://157.245.184.14"
+  URL:"http://nodejs.phuongtran.me"
 }
 
 export const ToolConsts = {
