@@ -2,8 +2,13 @@ const express = require('express');
 const app = express();
 const socket = require('socket.io');
 const http = require('http');
+var path = require('path');
 
 app.use(express.json());
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 
 // listening port
 const PORT = process.env.PORT || 8080;
@@ -23,6 +28,17 @@ io.on('connection', (socket) => {
 server.listen(PORT, ()=>{
   console.log(`Listening on port ${PORT}`);
 });
+
+
+// display a test
+app.get('/test/', (req, res) => {
+  res.render('test')
+})
+
+app.get('/favicon.ico', (req, res) => {
+  res.sendStatus(204);
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
