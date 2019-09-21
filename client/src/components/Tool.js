@@ -29,12 +29,17 @@ function Tool() {
   // open/close dialog
   const [open, setOpen] = useState(false)
 
-  // 
-  const _color = useRef(null)
-  const _width = useRef(null)
+
+  const _color = useRef(state.color)
+  const _width = useRef(state.width)
 
   const pickColor = (color, event) => {
+    // update local color when new color picked
+    _color.current = color.hex
     dispatch({ type: types.SET_COLOR, payload: color.hex })
+    // this dispatch preventing bug when users click Eraser then choose a color
+    // without this dispatch, it would expose Eraser implementation
+    dispatch({type: types.SET_WIDTH, payload: _width.current})
   }
 
   const clearDrawing = () => {
