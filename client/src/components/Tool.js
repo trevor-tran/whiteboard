@@ -1,9 +1,9 @@
-import React, { useContext, useState, useRef } from 'react'
+import React, { useContext, useState, useRef, useEffect } from 'react'
 
 import { Context } from '../store/store';
 import { types } from '../store/types'
 import randomstring from 'randomstring'
-import { ToolConsts, BACKGROUND_COLOR } from '../consts';
+import { ToolConsts, BACKGROUND_COLOR, ERASER_WIDTH } from '../consts';
 // components
 import { GithubPicker } from 'react-color'
 import Draggable from 'react-draggable';
@@ -32,6 +32,14 @@ function Tool() {
   const _color = useRef(state.color)
   const _width = useRef(state.width)
 
+  useEffect( () => {
+    if (state.color === BACKGROUND_COLOR && state.width === ERASER_WIDTH){
+      setIsErasing(true)
+    } else {
+      setIsErasing(false)
+    }
+  }, [state.color, state.width])
+
   const pickColor = (color, event) => {
     // update local color when new color picked
     _color.current = color.hex
@@ -39,8 +47,6 @@ function Tool() {
     // this dispatch preventing bug when users click Eraser then choose a color
     // without this dispatch, it would expose Eraser implementation
     dispatch({ type: types.SET_WIDTH, payload: _width.current })
-
-    setIsErasing(false)
   }
 
   const clearDrawing = () => {
@@ -48,7 +54,6 @@ function Tool() {
     //restore color and width
     dispatch({type: types.SET_COLOR, payload: _color.current})
     dispatch({type: types.SET_WIDTH, payload: _width.current})
-    setIsErasing(true)
   }
 
   // generate and update room code in global state
@@ -79,12 +84,10 @@ function Tool() {
     _color.current = state.color
     _width.current = state.width
     dispatch({ type: types.SET_ERASER })
-    setIsErasing(true)
   }
 
   const setPen = () => {
     dispatch({ type: types.SET_PEN, payload: { color: _color.current, width: _width.current } })
-    setIsErasing(false)
   }
 
   return (
