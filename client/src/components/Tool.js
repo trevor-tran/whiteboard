@@ -2,7 +2,8 @@ import React, { useContext, useState, useRef } from 'react'
 
 import { Context } from '../store/store';
 import { types } from '../store/types'
-
+import randomstring from 'randomstring'
+import { ToolConsts, BACKGROUND_COLOR } from '../consts';
 // components
 import { GithubPicker } from 'react-color'
 import Draggable from 'react-draggable';
@@ -16,10 +17,6 @@ import PenIcon from '@material-ui/icons/Create'
 import ScreenShareIcon from '@material-ui/icons/ScreenShare'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 
-import randomstring from 'randomstring'
-import { ToolConsts } from '../consts';
-
-
 
 function Tool() {
   // this is global state. Go to ../store/store.js to see what state is available 
@@ -28,6 +25,8 @@ function Tool() {
   const [roomCode, setRoomCode] = useState("")
   // open/close dialog
   const [open, setOpen] = useState(false)
+
+  const [is_erasing, setIsErasing] = useState(false)
 
 
   const _color = useRef(state.color)
@@ -39,11 +38,17 @@ function Tool() {
     dispatch({ type: types.SET_COLOR, payload: color.hex })
     // this dispatch preventing bug when users click Eraser then choose a color
     // without this dispatch, it would expose Eraser implementation
-    dispatch({type: types.SET_WIDTH, payload: _width.current})
+    dispatch({ type: types.SET_WIDTH, payload: _width.current })
+
+    setIsErasing(false)
   }
 
   const clearDrawing = () => {
     dispatch({ type: types.SET_CLEAR, payload: true })
+    //restore color and width
+    dispatch({type: types.SET_COLOR, payload: _color.current})
+    dispatch({type: types.SET_WIDTH, payload: _width.current})
+    setIsErasing(true)
   }
 
   // generate and update room code in global state
@@ -68,14 +73,18 @@ function Tool() {
   const closeDialog = () => {
     setOpen(false)
   }
+  
   const setEraser = () => {
+    // save current color and width to restore later
     _color.current = state.color
     _width.current = state.width
     dispatch({ type: types.SET_ERASER })
+    setIsErasing(true)
   }
 
   const setPen = () => {
     dispatch({ type: types.SET_PEN, payload: { color: _color.current, width: _width.current } })
+    setIsErasing(false)
   }
 
   return (
@@ -86,47 +95,32 @@ function Tool() {
           <GithubPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
           <div style={{ display: 'flex', flexDirection: "row" }}>
             <Tooltip title="Clear Canvas">
-              <Button
-                variant="contained" color="secondary"
-                onClick={clearDrawing}
-              > <DeleteIcon /> </Button>
+              <Button variant="contained" color="secondary" onClick={clearDrawing}> <DeleteIcon /> </Button>
             </Tooltip>
+
             <Tooltip title="Eraser">
-              <Button
-                variant="contained" color="default"
-                onClick={setEraser}
-              > <EraserIcon /> </Button>
+              {/* https://github.com/mui-org/material-ui/issues/8416 */}
+              <div>
+                <Button variant="contained" color="default" onClick={setEraser} disabled={is_erasing}> <EraserIcon /> </Button>
+              </div>
             </Tooltip>
+
             <Tooltip title="Pen">
-              <Button
-                variant="contained" color="primary"
-                onClick={setPen}
-              > <PenIcon /> </Button>
+              {/* https://github.com/mui-org/material-ui/issues/8416 */}
+              <div>
+                <Button variant="contained" color="primary" onClick={setPen} disabled={!is_erasing}> <PenIcon /> </Button>
+              </div>
             </Tooltip>
           </div>
           <div style={{ display: 'flex', flexDirection: "row" }}>
             <Tooltip title="Share your canvas">
-              <Button
-                style={{ marginRight: "1%" }}
-                variant="contained"
-                color="primary"
-                onClick={handleShare}
-              > <ScreenShareIcon /> </Button>
+              <Button style={{ marginRight: "1%" }} variant="contained" color="primary" onClick={handleShare}> <ScreenShareIcon /> </Button>
             </Tooltip>
             <Tooltip title="Join canvas by entering a room code">
-              <Button
-                style={{ marginRight: '1%' }}
-                variant="contained"
-                color="primary"
-                onClick={handleRoomInput}
-              > <MeetingRoomIcon /> </Button>
+              <Button style={{ marginRight: '1%' }} variant="contained" color="primary" onClick={handleRoomInput}> <MeetingRoomIcon /> </Button>
             </Tooltip>
-            <Input
-              value={roomCode}
-              placeholder="Room Code"
-              // https://github.com/atlassian/react-beautiful-dnd/issues/110#issuecomment-331304943
-              onMouseDown={e => e.stopPropagation()}
-              onChange={roomChange} />
+            {/* https://github.com/atlassian/react-beautiful-dnd/issues/110#issuecomment-331304943 */}
+            <Input value={roomCode} placeholder="Room Code" onMouseDown={e => e.stopPropagation()} onChange={roomChange} />
           </div>
         </Paper>
       </Draggable>

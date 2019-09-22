@@ -1,5 +1,6 @@
 export const server = {
-  URL:"http://nodejs.phuongtran.me"
+  // URL:"http://nodejs.phuongtran.me"
+  URL:"http://localhost:8080"
 }
 
 export const ToolConsts = {
@@ -10,3 +11,7 @@ export const ToolConsts = {
 export const CanvasConsts = {
   BROADCAST: "broadcast"
 }
+
+//canvas background color
+export const BACKGROUND_COLOR = "#ffffff"
+export const ERASER_WIDTH = 50
