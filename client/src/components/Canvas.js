@@ -54,16 +54,17 @@ function Canvas() {
 
       for (let i = 0; i < data.points.length; i++)
         if (data.points[i + 1]) {
-          drawLine(ctx, data.points[i], data.points[i + 1])
+          drawLine(canvas, data.points[i], data.points[i + 1])
         }
     })
   }, [state.room])
 
   // draw a line from start to end
-  const drawLine = (ctx, start, end) => {
+  const drawLine = (canvas, start, end) => {
+    const ctx = canvas.getContext('2d')
     ctx.beginPath()
-    ctx.moveTo(start.x, start.y)
-    ctx.lineTo(end.x, end.y)
+    ctx.moveTo(start.x * canvas.width, start.y * canvas.height)
+    ctx.lineTo(end.x * canvas.width, end.y * canvas.height)
     ctx.stroke()
   }
 
@@ -73,7 +74,9 @@ function Canvas() {
     setIsDrawing(true)
     const canvas = canvasRef.current
     let pos = getMousePos(canvas, e)
-    setCurrentPath(prev => [...prev, pos])
+    let posNorm = {x: Number(pos.x) / canvas.width, y: Number(pos.y) / canvas.height} 
+    console.log(posNorm)
+    setCurrentPath(prev => [...prev, posNorm])
   }
 
   // draw lines to current mouse location
@@ -85,10 +88,11 @@ function Canvas() {
       ctx.strokeStyle = state.color
       ctx.lineWidth = state.width
       if (current_path.length >= 2) {
-        drawLine(ctx, current_path[current_path.length - 2], current_path[current_path.length - 1])
+        drawLine(canvas, current_path[current_path.length - 2], current_path[current_path.length - 1])
       }
       let pos = getMousePos(canvas, e)
-      setCurrentPath(prev => [...prev, pos])
+      let posNorm = {x: Number(pos.x) / canvas.width, y: Number(pos.y) / canvas.height} 
+      setCurrentPath(prev => [...prev, posNorm])
     }
   }
 
