@@ -93,7 +93,7 @@ function Tool() {
   return (
     <React.Fragment>
       <Draggable bounds='parent'>
-        <Paper style={{ position: "absolute", display: "inline-flex", backgroundColor: "white", flexDirection: "column" }}>
+        <Paper style={{backgroundColor: "white", position: "absolute", left:"42%",  display: "inline-flex", flexDirection: "column" }}>
           {/* <TwitterPicker triangle="hide" color={state.color} onChangeComplete={pickColor} /> */}
           <GithubPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
           <div style={{ display: 'flex', flexDirection: "row" }}>
