@@ -22,9 +22,10 @@ function Canvas() {
   useEffect(() => {
     const canvas = canvasRef.current
     //https://stackoverflow.com/questions/10214873/make-canvas-as-wide-and-as-high-as-parent
-    canvas.width = canvas.offsetWidth
-    canvas.height = canvas.offsetHeight
-  }, [])
+    // https://stackoverflow.com/questions/1664785/resize-html5-canvas-to-fit-window
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+  }, [window.innerHeight, window.innerWidth])
 
   // clear canvas
   useEffect(() => {
