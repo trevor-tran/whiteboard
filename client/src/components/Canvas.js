@@ -73,9 +73,7 @@ function Canvas() {
   const startDrawing = (e) => {
     setIsDrawing(true)
     const canvas = canvasRef.current
-    let pos = getMousePos(canvas, e)
-    let posNorm = {x: Number(pos.x) / canvas.width, y: Number(pos.y) / canvas.height} 
-    console.log(posNorm)
+    let posNorm = getMousePosNorm(canvas, e)
     setCurrentPath(prev => [...prev, posNorm])
   }
 
@@ -90,8 +88,7 @@ function Canvas() {
       if (current_path.length >= 2) {
         drawLine(canvas, current_path[current_path.length - 2], current_path[current_path.length - 1])
       }
-      let pos = getMousePos(canvas, e)
-      let posNorm = {x: Number(pos.x) / canvas.width, y: Number(pos.y) / canvas.height} 
+      let posNorm = getMousePosNorm(canvas, e)
       setCurrentPath(prev => [...prev, posNorm])
     }
   }
@@ -107,18 +104,18 @@ function Canvas() {
   }
 
   // https://stackoverflow.com/questions/17130395/real-mouse-position-in-canvas
-  function getMousePos(canvas, evt) {
+  function getMousePosNorm(canvas, evt) {
     var rect = canvas.getBoundingClientRect();
     if (evt.changedTouches) {
       return {
-        x: evt.changedTouches[0].clientX - rect.left,
-        y: evt.changedTouches[0].clientY - rect.top
+        x: (evt.changedTouches[0].clientX - rect.left) / canvas.width,
+        y: (evt.changedTouches[0].clientY - rect.top) / canvas.height
       }
     }
 
     return {
-      x: evt.clientX - rect.left,
-      y: evt.clientY - rect.top
+      x: (evt.clientX - rect.left) / canvas.width,
+      y: (evt.clientY - rect.top) / canvas.height
     }
   }
 
