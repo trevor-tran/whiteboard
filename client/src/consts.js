@@ -1,6 +1,6 @@
 export const server = {
-  // URL:"http://nodejs.phuongtran.me"
-  URL:"http://localhost:8080"
+  URL:"http://nodejs.phuongtran.me"
+  // URL:"http://localhost:8080"
 }
 
 export const ToolConsts = {
