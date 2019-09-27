@@ -7,7 +7,7 @@ import { ToolConsts, BACKGROUND_COLOR, ERASER_WIDTH } from '../consts';
 // components
 import { GithubPicker } from 'react-color'
 import Draggable from 'react-draggable';
-import { Button, Paper, Input, Tooltip } from '@material-ui/core'
+import { Button, Paper, Input, Tooltip, Grid } from '@material-ui/core'
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
 
 //icons
@@ -93,38 +93,38 @@ function Tool() {
   return (
     <React.Fragment>
       <Draggable bounds='parent'>
-        <Paper style={{backgroundColor: "white", position: "absolute", left:"42%",  display: "inline-flex", flexDirection: "column" }}>
-          {/* <TwitterPicker triangle="hide" color={state.color} onChangeComplete={pickColor} /> */}
+        <Paper style={{backgroundColor: "white", position: "absolute", left:"42%",  display: "inline-flex", flexDirection: "column", cursor:"move" }}>
           <GithubPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
-          <div style={{ display: 'flex', flexDirection: "row" }}>
+          <Grid container direction="row" justify="space-between">
             <Tooltip title="Clear Canvas">
-              <Button variant="contained" color="secondary" onClick={clearDrawing}> <DeleteIcon /> </Button>
+              <Button size="small" variant="contained" color="secondary" onClick={clearDrawing}> <DeleteIcon /> </Button>
             </Tooltip>
 
             <Tooltip title="Eraser">
               {/* https://github.com/mui-org/material-ui/issues/8416 */}
               <div>
-                <Button variant="contained" color="default" onClick={setEraser} disabled={is_erasing}> <EraserIcon /> </Button>
+                <Button size="small" variant="contained" color="default" onClick={setEraser} disabled={is_erasing}> <EraserIcon /> </Button>
               </div>
             </Tooltip>
 
             <Tooltip title="Pen">
-              {/* https://github.com/mui-org/material-ui/issues/8416 */}
               <div>
-                <Button variant="contained" color="primary" onClick={setPen} disabled={!is_erasing}> <PenIcon /> </Button>
+                <Button size="small" variant="contained" color="primary" onClick={setPen} disabled={!is_erasing}> <PenIcon /> </Button>
               </div>
             </Tooltip>
-          </div>
-          <div style={{ display: 'flex', flexDirection: "row" }}>
+          {/* </div> */}
+          </Grid>
+          {/* <div style={{ display: 'flex', flexDirection: "row" }}> */}
+          <Grid container direction="row" justify="space-between">
             <Tooltip title="Share your canvas">
-              <Button style={{ marginRight: "1%" }} variant="contained" color="primary" onClick={handleShare}> <ScreenShareIcon /> </Button>
+              <Button size="small" variant="contained" color="primary" onClick={handleShare}> <ScreenShareIcon /> </Button>
             </Tooltip>
             <Tooltip title="Join canvas by entering a room code">
-              <Button style={{ marginRight: '1%' }} variant="contained" color="primary" onClick={handleRoomInput}> <MeetingRoomIcon /> </Button>
+              <Button size="small" variant="contained" color="primary" onClick={handleRoomInput}> <MeetingRoomIcon /> </Button>
             </Tooltip>
             {/* https://github.com/atlassian/react-beautiful-dnd/issues/110#issuecomment-331304943 */}
-            <Input value={roomCode} placeholder="Room Code" onMouseDown={e => e.stopPropagation()} onChange={roomChange} />
-          </div>
+            {/* <Input value={roomCode} placeholder="Room Code" onMouseDown={e => e.stopPropagation()} onChange={roomChange} /> */}
+            </Grid>
         </Paper>
       </Draggable>
 

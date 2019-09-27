@@ -121,7 +121,7 @@ function Canvas() {
   }
 
   return (
-    <div className='canvas'   style={{width:"100vw", height: "100vh",  cursor: "pointer"}}>
+    <div className='canvas'   style={{width:"100vw", height: "100vh",  cursor: "crosshair"}}>
       <canvas
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}
