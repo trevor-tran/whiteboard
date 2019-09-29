@@ -7,7 +7,7 @@ import { ToolConsts, BACKGROUND_COLOR, ERASER_WIDTH } from '../consts';
 // components
 import { GithubPicker } from 'react-color'
 import Draggable from 'react-draggable';
-import { Button, Paper, Input, Tooltip, Grid } from '@material-ui/core'
+import { Button, Paper, Input, Tooltip, Grid, Typography } from '@material-ui/core'
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
 
 //icons
@@ -123,7 +123,7 @@ function Tool() {
               <Button size="small" variant="contained" color="primary" onClick={handleRoomInput}> <MeetingRoomIcon /> </Button>
             </Tooltip>
             {/* https://github.com/atlassian/react-beautiful-dnd/issues/110#issuecomment-331304943 */}
-            {/* <Input value={roomCode} placeholder="Room Code" onMouseDown={e => e.stopPropagation()} onChange={roomChange} /> */}
+            <Input value={roomCode} placeholder="Room Code" onMouseDown={e => e.stopPropagation()} onChange={roomChange} />
             </Grid>
         </Paper>
       </Draggable>
@@ -132,7 +132,7 @@ function Tool() {
       <Dialog open={open} onClose={closeDialog}>
         <DialogTitle>{"Share this room code"}</DialogTitle>
         <DialogContent>
-          <DialogContentText>{state.room}</DialogContentText>
+          <Typography gutterBottom>{state.room}</Typography>
         </DialogContent>
         <DialogActions>
           <Button onClick={closeDialog} color="primary"> Close </Button>
