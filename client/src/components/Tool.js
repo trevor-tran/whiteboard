@@ -18,7 +18,7 @@ import ScreenShareIcon from '@material-ui/icons/ScreenShare'
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 
 
-function Tool() {
+export default function Tool() {
   // this is global state. Go to ../store/store.js to see what state is available 
   const { state, dispatch } = useContext(Context)
   // room code user enters into the HTML Input tag
@@ -93,8 +93,9 @@ function Tool() {
   return (
     <React.Fragment>
       <Draggable bounds='parent'>
-        <Paper style={{backgroundColor: "white", position: "absolute", left:"42%",  display: "inline-flex", flexDirection: "column", cursor:"move" }}>
+        <Paper style={styles.container}>
           <GithubPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
+          {/* container of the first line of buttons */}
           <Grid container direction="row" justify="space-between">
             <Tooltip title="Clear Canvas">
               <Button size="small" variant="contained" color="secondary" onClick={clearDrawing}> <DeleteIcon /> </Button>
@@ -112,9 +113,8 @@ function Tool() {
                 <Button size="small" variant="contained" color="primary" onClick={setPen} disabled={!is_erasing}> <PenIcon /> </Button>
               </div>
             </Tooltip>
-          {/* </div> */}
           </Grid>
-          {/* <div style={{ display: 'flex', flexDirection: "row" }}> */}
+          {/* second lines: buttons and text input */}
           <Grid container direction="row" justify="space-between">
             <Tooltip title="Share your canvas">
               <Button size="small" variant="contained" color="primary" onClick={handleShare}> <ScreenShareIcon /> </Button>
@@ -123,7 +123,7 @@ function Tool() {
               <Button size="small" variant="contained" color="primary" onClick={handleRoomInput}> <MeetingRoomIcon /> </Button>
             </Tooltip>
             {/* https://github.com/atlassian/react-beautiful-dnd/issues/110#issuecomment-331304943 */}
-            <Input value={roomCode} placeholder="Room Code" onMouseDown={e => e.stopPropagation()} onChange={roomChange} />
+            <Input style={styles.codeInput} value={roomCode} placeholder="room #" onMouseDown={e => e.stopPropagation()} onChange={roomChange} />
             </Grid>
         </Paper>
       </Draggable>
@@ -142,4 +142,16 @@ function Tool() {
   )
 }
 
-export default Tool
+const styles = {
+  container: {
+    backgroundColor: "white", 
+    position: "absolute",
+    left:"42%",
+    display: "inline-flex",
+    flexDirection: "column", 
+    cursor:"move"
+  },
+  codeInput: {
+    width: 85
+  }
+}
