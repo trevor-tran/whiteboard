@@ -1,3 +1,4 @@
+var createError = require('http-errors');
 const express = require('express');
 const app = express();
 const socket = require('socket.io');
@@ -31,6 +32,9 @@ server.listen(PORT, ()=>{
 
 
 // display a test
+app.get('/', (req, res) => {
+  res.render('root')
+})
 app.get('/test/', (req, res) => {
   res.render('test')
 })
