@@ -4,7 +4,7 @@ import {BACKGROUND_COLOR, ERASER_WIDTH} from '../consts'
 
 export const initialState = {
   color: "#B80000",
-  width: 2,
+  width: 1,
   clear: false,
   room: ""
 }

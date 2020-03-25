@@ -10,21 +10,35 @@ const socket = io(server.URL)
 function Canvas() {
 
   const canvasRef = useRef(null)
-  // this is global state. Go to ../store/store.js to see what state is available 
+  // this is global state. Go to ../store/store.js to see what state is available
   const { state, dispatch } = useContext(Context)
   // is user drawing?
   const [is_drawing, setIsDrawing] = useState(false)
   // the current path. a path is defined when user press the mouse, drag, and release.
   const [current_path, setCurrentPath] = useState([])
 
+  const paths = useRef([]);
+
 
   // make canvas wider
   useEffect(() => {
-    const canvas = canvasRef.current
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
     //https://stackoverflow.com/questions/10214873/make-canvas-as-wide-and-as-high-as-parent
     // https://stackoverflow.com/questions/1664785/resize-html5-canvas-to-fit-window
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
+    console.log(paths.current)
+
+    paths.current.forEach( path => {
+      ctx.strokeStyle = path.color;
+      ctx.lineWidth = path.width;
+      for (let i = 0; i < path.points.length; i++) {
+        if (path.points[i + 1]) {
+          drawLine(canvas, path.points[i], path.points[i + 1])
+        }
+      }
+    })
   }, [window.innerHeight, window.innerWidth])
 
   // clear canvas
@@ -35,6 +49,7 @@ function Canvas() {
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       dispatch({ type: types.SET_CLEAR, payload: false })
       socket.emit(CanvasConsts.BROADCAST, { state: state, points: [] })
+      paths.current = [];
     }
   }, [state.clear, dispatch])
 
@@ -42,7 +57,6 @@ function Canvas() {
   useEffect(() => {
     const canvas = canvasRef.current
     const ctx = canvas.getContext('2d')
-
     socket.on(state.room, data => {
       if (data.state.clear) {
         // clear the entire canvas
@@ -53,17 +67,23 @@ function Canvas() {
       ctx.strokeStyle = data.state.color
       ctx.lineWidth = data.state.width
 
-      for (let i = 0; i < data.points.length; i++)
+      for (let i = 0; i < data.points.length; i++) {
         if (data.points[i + 1]) {
           drawLine(canvas, data.points[i], data.points[i + 1])
         }
+      }
+      paths.current.push({
+        points: data.points,
+        color: ctx.strokeStyle,
+        width: ctx.lineWidth
+      });
     })
   }, [state.room])
 
   // draw a line from start to end
   const drawLine = (canvas, start, end) => {
-    const ctx = canvas.getContext('2d')
-    ctx.beginPath()
+    const ctx = canvas.getContext('2d');
+    ctx.beginPath();
     ctx.moveTo(start.x * canvas.width, start.y * canvas.height)
     ctx.lineTo(end.x * canvas.width, end.y * canvas.height)
     ctx.stroke()
@@ -87,6 +107,11 @@ function Canvas() {
       ctx.strokeStyle = state.color
       ctx.lineWidth = state.width
       if (current_path.length >= 2) {
+        paths.current.push({
+          points: current_path,
+          color: ctx.strokeStyle,
+          width: ctx.lineWidth
+        });
         drawLine(canvas, current_path[current_path.length - 2], current_path[current_path.length - 1])
       }
       let posNorm = getMousePosNorm(canvas, e)
