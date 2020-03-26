@@ -10,6 +10,7 @@
   "dependencies": {
     "@material-ui/core": "^4.4.0",
     "@material-ui/icons": "^4.2.1",
+    "paper": "^0.12.4",
     "randomstring": "^1.1.5",
     "react": "^16.9.0",
     "react-color": "^2.17.3",

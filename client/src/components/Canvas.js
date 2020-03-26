@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext, useEffect } from 'react'
 import { Context } from '../store/store'
 import { types } from '../store/types'
-
+import paper from 'paper';
 import io from 'socket.io-client'
 import { server, CanvasConsts } from '../consts'
 
@@ -17,7 +17,18 @@ function Canvas() {
   // the current path. a path is defined when user press the mouse, drag, and release.
   const [current_path, setCurrentPath] = useState([])
 
+  // html5 canvas id
+  const canvasId = useRef("drawing-canvas");
   const paths = useRef([]);
+  const paperPath = useRef(null);
+
+  // call once on initial render
+  useEffect(() => {
+    paper.setup(canvasId.current);
+    paperPath.current = new paper.Path();
+    paperPath.current.strokeColor = 'black';
+    paperPath.current.add(new paper.Point(400,150), new paper.Point(100,300));
+  },[]);
 
 
   // make canvas wider
@@ -45,7 +56,7 @@ function Canvas() {
   useEffect(() => {
     if (state.clear) {
       const canvas = canvasRef.current
-      const ctx = canvas.getContext('2d')
+      const ctx = canvas.getContext('2d');
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
       dispatch({ type: types.SET_CLEAR, payload: false })
       socket.emit(CanvasConsts.BROADCAST, { state: state, points: [] })
@@ -126,6 +137,18 @@ function Canvas() {
       socket.emit(CanvasConsts.BROADCAST, { state: state, points: current_path })
     }
     setIsDrawing(false)
+    console.log(paperPath.current);
+    paperPath.current = new paper.Path();
+    paperPath.current.strokeColor = 'black';
+    let segments = [];
+    const canvas = canvasRef.current
+    const ctx = canvas.getContext('2d');
+    current_path.forEach( normPoint => {
+      segments.push([normPoint.x * canvas.width, normPoint.y * canvas.height]);
+    })
+    paperPath.current.segments = segments;
+    paperPath.current.simplify(10);
+    console.log(100 - (paperPath.current.segments.length / segments.length) * 100);
     setCurrentPath([])
   }
 
@@ -148,6 +171,7 @@ function Canvas() {
   return (
     <div className='canvas'   style={{width:"100vw", height: "100vh",  cursor: "crosshair"}}>
       <canvas
+        id={canvasId.current}
         ref={canvasRef}
         style={{ width: '100%', height: '100%' }}
         onMouseDown={startDrawing}
@@ -156,6 +180,7 @@ function Canvas() {
         onTouchStart={startDrawing}
         onTouchMove={draw}
         onTouchEnd={stopDrawing}
+        // style={{backgroundColor: "blue"}}
       />
     </div>
   )
