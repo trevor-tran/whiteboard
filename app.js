@@ -14,7 +14,9 @@ app.set('view engine', 'pug');
 // listening port
 const PORT = process.env.PORT || 8080;
 const server = http.createServer(app);
-const io = socket(server);
+
+// having time out to fix "WebSocket is already in CLOSING or CLOSED state"
+const io = socket(server, {pingTimeout: 60000});
 
 //Whenever someone connects this gets executed
 io.on('connection', (socket) => {
