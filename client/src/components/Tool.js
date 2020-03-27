@@ -19,7 +19,7 @@ import MeetingRoomIcon from '@material-ui/icons/MeetingRoom'
 
 
 export default function Tool() {
-  // this is global state. Go to ../store/store.js to see what state is available 
+  // this is global state. Go to ../store/store.js to see what state is available
   const { state, dispatch } = useContext(Context)
   // room code user enters into the HTML Input tag
   const [roomCode, setRoomCode] = useState("")
@@ -78,7 +78,7 @@ export default function Tool() {
   const closeDialog = () => {
     setOpen(false)
   }
-  
+
   const setEraser = () => {
     // save current color and width to restore later
     _color.current = state.color
@@ -94,33 +94,33 @@ export default function Tool() {
     <React.Fragment>
       <Draggable bounds='parent'>
         <Paper style={styles.container}>
-          <GithubPicker triangle="hide" color={state.color} onChangeComplete={pickColor} />
+          <GithubPicker triangle="hide" color={state.color} colors={['#B80000', '#DB3E00', '#FCCB00', '#008B02', '#006B76', '#1273DE', '#004DCF', '#5300EB']} onChangeComplete={pickColor} />
           {/* container of the first line of buttons */}
           <Grid container direction="row" justify="space-between">
             <Tooltip title="Clear Canvas">
-              <Button size="small" variant="contained" color="secondary" onClick={clearDrawing}> <DeleteIcon /> </Button>
+              <Button size="small" variant="contained" color="secondary" onClick={clearDrawing}> <DeleteIcon style={styles.iconSize}/> </Button>
             </Tooltip>
 
             <Tooltip title="Eraser">
               {/* https://github.com/mui-org/material-ui/issues/8416 */}
               <div>
-                <Button size="small" variant="contained" color="default" onClick={setEraser} disabled={is_erasing}> <EraserIcon /> </Button>
+                <Button size="small" variant="contained" color="default" onClick={setEraser} disabled={is_erasing}> <EraserIcon style={styles.iconSize}/> </Button>
               </div>
             </Tooltip>
 
             <Tooltip title="Pen">
               <div>
-                <Button size="small" variant="contained" color="primary" onClick={setPen} disabled={!is_erasing}> <PenIcon /> </Button>
+                <Button size="small" variant="contained" color="primary" onClick={setPen} disabled={!is_erasing}> <PenIcon style={styles.iconSize}/> </Button>
               </div>
             </Tooltip>
           </Grid>
           {/* second lines: buttons and text input */}
           <Grid container direction="row" justify="space-between">
             <Tooltip title="Share your canvas">
-              <Button size="small" variant="contained" color="primary" onClick={handleShare}> <ScreenShareIcon /> </Button>
+              <Button size="small" variant="contained" color="primary" onClick={handleShare}> <ScreenShareIcon style={styles.iconSize}/> </Button>
             </Tooltip>
             <Tooltip title="Join canvas by entering a room code">
-              <Button size="small" variant="contained" color="primary" onClick={handleRoomInput}> <MeetingRoomIcon /> </Button>
+              <Button size="small" variant="contained" color="primary" onClick={handleRoomInput}> <MeetingRoomIcon style={styles.iconSize}/> </Button>
             </Tooltip>
             {/* https://github.com/atlassian/react-beautiful-dnd/issues/110#issuecomment-331304943 */}
             <Input style={styles.codeInput} value={roomCode} placeholder="room #" onMouseDown={e => e.stopPropagation()} onChange={roomChange} />
@@ -144,14 +144,17 @@ export default function Tool() {
 
 const styles = {
   container: {
-    backgroundColor: "white", 
+    backgroundColor: "white",
     position: "absolute",
     left:"42%",
     display: "inline-flex",
-    flexDirection: "column", 
+    flexDirection: "column",
     cursor:"move"
   },
   codeInput: {
     width: 85
+  },
+  iconSize: {
+    fontSize: 20
   }
 }
