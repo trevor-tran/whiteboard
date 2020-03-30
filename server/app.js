@@ -18,6 +18,10 @@ const server = http.createServer(app);
 // having time out to fix "WebSocket is already in CLOSING or CLOSED state"
 const io = socket(server, {pingTimeout: 60000});
 
+// reference on deployement
+// https://stackoverflow.com/questions/31456871/cannot-get-on-reverse-proxy-from-nginx-to-socket-io-on-express-js
+
+
 //Whenever someone connects this gets executed
 io.on('connection', (socket) => {
   // console.log('A user connected')
@@ -34,10 +38,10 @@ server.listen(PORT, ()=>{
 
 
 // display a test
-app.get('/', (req, res) => {
+app.get('/server', (req, res) => {
   res.render('root')
 })
-app.get('/test/', (req, res) => {
+app.get('/server/test/', (req, res) => {
   res.render('test')
 })
 

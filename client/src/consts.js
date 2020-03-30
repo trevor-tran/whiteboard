@@ -1,5 +1,5 @@
 export const server = {
-  // URL:"http://drawing.phuongtran.me/server/"
+  // URL:"http://phuongtran.me/server" for deployment
   URL:"http://localhost:8080"
 }
 
