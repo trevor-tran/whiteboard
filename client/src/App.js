@@ -3,10 +3,10 @@ import React, { useReducer, useState } from 'react';
 import { Context, initialState, reducer } from './store/store';
 
 // components
-import Sharing from './components/Sharing';
+import Sharing from './components/tool-bar/Sharing';
 import Canvas from './components/canvas/Canvas';
-import ColorPicker from './components/color-picker/ColorPicker';
-import ToolPicker from './components/tool/ToolPicker';
+import ColorPicker from './components/tool-bar/ColorPicker';
+import ToolPicker from './components/tool-bar/ToolPicker';
 
 import { shapeType, COLOR_LIST } from './components/utils/const';
 

@@ -1,12 +1,10 @@
 import { useContext, useState, useRef, useEffect } from 'react'
 
-import { Context } from '../store/store';
-import { types } from '../store/types'
+import { Context } from '../../store/store';
+import { types } from '../../store/types'
 import randomstring from 'randomstring'
-import { ToolConsts, BACKGROUND_COLOR, ERASER_WIDTH } from '../consts';
+import { ToolConsts, BACKGROUND_COLOR, ERASER_WIDTH } from '../../consts';
 
-// components
-import { GithubPicker, CompactPicker, CirclePicker } from 'react-color';
 import {
   Button,
   Input,

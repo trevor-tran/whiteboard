@@ -1,4 +1,3 @@
-
 import DrawIcon from '@mui/icons-material/Draw';
 import Crop75Icon from '@mui/icons-material/Crop75';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
@@ -14,6 +13,7 @@ export default function Tool({tool, onToolSelect}) {
     e.currentTarget.classList.add("active");
     onToolSelect(e.currentTarget.value);
   }
+
   return (
     <div className="btn-group" role="group" data-toggle="button" >
       <button value={shapeType.FREE_LINE} type="button" className="btn" data-toggle="tooltip" data-placement="bottom" title="Pen" onClick={handleToolClick}><DrawIcon /></button>

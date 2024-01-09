@@ -207,7 +207,6 @@ function drawOnCanvas(shape, key) {
         key={key}
         points={shape.points}
         stroke={shape.color}
-        strokeWidth={1}
         tension={0.5}
       />
     )
