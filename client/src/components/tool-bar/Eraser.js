@@ -8,7 +8,6 @@ import { getAndRemoveLastItem } from "../utils/utils";
 
 
 export default function Eraser({shapes, onClearAll, onUndo, onRedo}) {
-
   const [undoShapes, setUndoShapes] = useState([]);
 
   function handleClearAll() {
@@ -57,15 +56,16 @@ export default function Eraser({shapes, onClearAll, onUndo, onRedo}) {
         <RedoIcon />
       </button>
 
-      <button
+      {/* <button
         type="button"
         className="btn"
         data-toggle="tooltip"
         data-placement="bottom"
         title="Eraser"
+        onClick={handleEraserClick}
       >
         <EraserIcon />
-      </button>
+      </button> */}
 
       <button
         type="button"
