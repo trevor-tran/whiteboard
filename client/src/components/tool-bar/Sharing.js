@@ -112,12 +112,6 @@ export default function Sharing() {
             <Button size="small" variant="contained" onClick={setEraser} disabled={is_erasing}> <EraserIcon style={styles.iconSize} /> </Button>
           </div>
         </Tooltip>
-
-        <Tooltip title="Pen">
-          <div>
-            <Button size="small" variant="contained" color="primary" onClick={setPen} disabled={!is_erasing}> <PenIcon style={styles.iconSize} /> </Button>
-          </div>
-        </Tooltip>
       </Grid>
       {/* second lines: buttons and text input */}
       <Grid container direction="row" justify="space-between">

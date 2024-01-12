@@ -7,6 +7,7 @@ import Sharing from './components/tool-bar/Sharing';
 import Canvas from './components/canvas/Canvas';
 import ColorPicker from './components/tool-bar/ColorPicker';
 import ToolPicker from './components/tool-bar/ToolPicker';
+import Eraser from './components/tool-bar/Eraser';
 
 import { shapeType, COLOR_LIST } from './components/utils/const';
 
@@ -17,36 +18,26 @@ function App() {
   const [currentTool, setCurrentTool] = useState(shapeType.FREE_LINE);
   const [shapes, setShapes] = useState([]);
 
-  function handleColorChange(color) {
-    setCurrentColor(color);
-  }
-
-  function handleDraw(shape) {
-    const updatedShapes = [...shapes, shape];
-    setShapes(updatedShapes);
-  }
-
-  function handleToolSelect(tool) {
-    setCurrentTool(tool);
-  }
-
   return (
     <Context.Provider value={{ state, dispatch }}>
       <div className="container-fluid">
-        <div className="row align-items-center" style={{ border: "solid red" }}>
+        <div className="row align-items-center justify-content-center" style={{ border: "solid red" }}>
           <div className="col">
             <Sharing />
           </div>
-          <div className="col">
-          <ToolPicker tool={currentTool} onToolSelect={handleToolSelect}/>
+          <div className="col border border-secondary">
+          <ToolPicker tool={currentTool} onToolSelect={setCurrentTool}/>
           </div>
-          <div className="col" style={{border: "solid navy" }}>
-            <ColorPicker color={currentColor} onColorChange={handleColorChange} />
+          <div className="col border border-secondary">
+            <Eraser shapes={shapes} onClearAll={setShapes} onUndo={setShapes} onRedo={setShapes}/>
+          </div>
+          <div className="col">
+            <ColorPicker color={currentColor} onColorChange={setCurrentColor} />
           </div>
         </div>
         <div className="row" style={{height: "80vh", border: "solid pink" }}>
           <div className="col" style={{ border: "solid green" }}>
-            <Canvas color={currentColor} tool={currentTool} shapes={shapes} onDraw={handleDraw}/>
+            <Canvas color={currentColor} tool={currentTool} shapes={shapes} onDraw={newShape => setShapes([...shapes, newShape])}/>
           </div>
         </div>
       </div>
