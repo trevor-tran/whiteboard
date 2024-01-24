@@ -3,13 +3,8 @@ const express = require('express');
 const app = express();
 const socket = require('socket.io');
 const http = require('http');
-var path = require('path');
 
 app.use(express.json());
-
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
 
 // listening port
 const PORT = process.env.PORT || 8080;

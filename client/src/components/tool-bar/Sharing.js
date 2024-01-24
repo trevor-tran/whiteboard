@@ -98,32 +98,24 @@ export default function Sharing() {
   }
 
   return (
-    <>
-      {/* <CirclePicker triangle="hide" color={state.color} colors={['#B80000', '#FCCB00', '#006B76', '#1273DE', '#5300EB']} onChangeComplete={pickColor} /> */}
-      {/* container of the first line of buttons */}
-      <Grid container direction="row" justify="space-between">
-        <Tooltip title="Clear Canvas">
-          <Button size="small" variant="contained" color="secondary" onClick={clearDrawing}> <DeleteForeverIcon style={styles.iconSize} /> </Button>
-        </Tooltip>
+    <div>
+        <button
+          type="button"
+          className="btn"
+          title="Share your canvas"
+          onClick={handleShare}
+        >
+          <ScreenShareIcon />
+        </button>
+        <button
+          type="button"
+          className="btn"
+          title="Enter room number"
+          onClick={handleRoomInput}
+        >
+          <MeetingRoomIcon />
+        </button>
 
-        <Tooltip title="Eraser">
-          {/* https://github.com/mui-org/material-ui/issues/8416 */}
-          <div>
-            <Button size="small" variant="contained" onClick={setEraser} disabled={is_erasing}> <EraserIcon style={styles.iconSize} /> </Button>
-          </div>
-        </Tooltip>
-      </Grid>
-      {/* second lines: buttons and text input */}
-      <Grid container direction="row" justify="space-between">
-        <Tooltip title="Share your canvas">
-          <Button size="small" variant="contained" color="primary" onClick={handleShare}> <ScreenShareIcon style={styles.iconSize} /> </Button>
-        </Tooltip>
-        <Tooltip title="Join canvas by entering a room code">
-          <Button size="small" variant="contained" color="primary" onClick={handleRoomInput}> <MeetingRoomIcon style={styles.iconSize} /> </Button>
-        </Tooltip>
-        {/* https://github.com/atlassian/react-beautiful-dnd/issues/110#issuecomment-331304943 */}
-        <Input style={styles.codeInput} value={roomCode} placeholder="room #" onMouseDown={e => e.stopPropagation()} onChange={roomChange} />
-      </Grid>
 
       {/* a dialog display the generated room code when user clicks share button */}
       <Dialog open={open} onClose={closeDialog}>
@@ -135,7 +127,7 @@ export default function Sharing() {
           <Button onClick={closeDialog} color="primary"> Close </Button>
         </DialogActions>
       </Dialog>
-    </>
+    </div>
   )
 }
 
