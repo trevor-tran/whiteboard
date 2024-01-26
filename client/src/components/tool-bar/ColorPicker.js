@@ -3,7 +3,7 @@ import { CirclePicker } from 'react-color';
 
 
 
-import { COLOR_LIST } from '../utils/const';
+import { COLOR_LIST } from '../../utils/const';
 
 function ColorPicker({color, onColorChange}) {
 

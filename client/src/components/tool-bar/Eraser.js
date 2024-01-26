@@ -4,7 +4,7 @@ import RedoIcon from '@mui/icons-material/Redo';
 import UndoIcon from '@mui/icons-material/Undo';
 import { useState } from 'react';
 
-import { getAndRemoveLastItem } from "../utils/utils";
+import { getAndRemoveLastItem } from "../../utils/utils";
 
 
 export default function Eraser({shapes, onClearAll, onUndo, onRedo}) {

@@ -1,10 +1,6 @@
-// todo: draw straight line need to be "animated"
-import React, { useRef, useState, useContext, useEffect } from 'react'
-import { Context } from '../../store/store'
+import React, { useRef, useState, useEffect } from 'react'
 import paper from 'paper';
-import io from 'socket.io-client'
-import { server, CanvasConsts } from '../../consts'
-
+import { shapeType } from '../utils/const';
 import {
   Stage,
   Layer,
@@ -12,13 +8,6 @@ import {
   Circle,
   Line
 } from 'react-konva';
-
-// const socket = io(server.URL)
-
-import { shapeType } from '../utils/const';
-
-// css
-import "./canvas.scss";
 import { accordionSummaryClasses } from '@mui/material';
 
 
@@ -31,13 +20,14 @@ function Canvas({ color, tool, onDraw, shapes }) {
 
   useEffect(() => {
     paper.setup(layerRef.current);
-  },[]);
+  }, []);
 
   const handleMouseDown = (e) => {
     isDrawing.current = true;
     const pos = e.target.getStage().getPointerPosition();
     let shape;
-    if (tool === shapeType.CIRCLE) {accordionSummaryClasses
+    if (tool === shapeType.CIRCLE) {
+      accordionSummaryClasses
       shape = { shapeType: tool, color: color, center: pos, radius: 0 };
     } else if (tool === shapeType.RECT) {
       shape = { shapeType: tool, color: color, topLeft: pos, width: 0, height: 0 };
@@ -89,14 +79,18 @@ function Canvas({ color, tool, onDraw, shapes }) {
   const handleMouseUp = () => {
     isDrawing.current = false;
 
+    // simplify path for free lines
     if (currentShape.shapeType === shapeType.FREE_LINE) {
-      let newSimplifiedPath = {...currentShape};
+      // do not draw a pixel-sized dot on canvas since it's not visible
+      if (currentShape.points.length > 2) {
+        let newSimplifiedPath = { ...currentShape };
+        freePathSimplifier.current.simplify();
+        // transform to appropriate points format, which is array of coordinates
+        newSimplifiedPath.points = flattenPaperJsSegments(freePathSimplifier.current.segments);
 
-      freePathSimplifier.current.simplify();
-      // transform to appropriate points format, which is array of coordinates
-      newSimplifiedPath.points = flattenPaperJsSegments(freePathSimplifier.current.segments);
+        onDraw(newSimplifiedPath);
+      }
 
-      onDraw(newSimplifiedPath);
     } else {
       onDraw(currentShape);
     }
@@ -106,7 +100,7 @@ function Canvas({ color, tool, onDraw, shapes }) {
 
   return (
     <Stage
-      className="canvas"
+      style={{ "cursor": "pointer" }}
       width={window.innerWidth}
       height={window.innerHeight}
       onMouseDown={handleMouseDown}
@@ -122,6 +116,12 @@ function Canvas({ color, tool, onDraw, shapes }) {
 };
 
 export default React.memo(Canvas);
+
+
+
+
+
+
 
 
 /**

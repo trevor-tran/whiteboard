@@ -4,7 +4,7 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 
 import "./ToolPicker.scss";
-import { shapeType } from '../utils/const';
+import { shapeType } from '../../utils/const';
 
 export default function Tool({ tool, onToolSelect }) {
   function handleToolClick(e) {
