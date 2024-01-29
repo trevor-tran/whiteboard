@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Manager } from "socket.io-client";
+import React, { useEffect, useState } from 'react';
 
 // components
 import Sharing from './components/tool-bar/Sharing';
@@ -8,68 +7,103 @@ import ColorPicker from './components/tool-bar/ColorPicker';
 import ToolPicker from './components/tool-bar/ToolPicker';
 import Eraser from './components/tool-bar/Eraser';
 
-import { shapeType, COLOR_LIST, connection } from './utils/const';
-
-const manager = new Manager(connection.serverURL);
-const socket = manager.socket("/");
-
-
-
-
-
+import { shapeType, COLOR_LIST } from './utils/const';
+import {socket} from "./utils/socket";
+import NetworkStatus from './components/NetworkStatus';
 
 function App() {
   const [currentColor, setCurrentColor] = useState(COLOR_LIST[0]);
   const [currentTool, setCurrentTool] = useState(shapeType.FREE_LINE);
   const [shapes, setShapes] = useState([]);
-  const [room, setRoom] = useState("");
+  const [room, setRoom] = useState(null);
+  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [canvasHeight, setCanvasHeight] = useState(0);
+  const [latency, setLatency] = useState(0)
 
-  const prevRoom = useRef(room);
-
-  useEffect(() => {
-    if (room && prevRoom.current !== room) {
-      socket.emit("room", room);
-      prevRoom.current = room;
-      console.log(room)
-      socket.on(room, data => {
-        setShapes(data)
-      })
-    }
-  }, [room])
 
   useEffect(() => {
     socket.emit("transmit", {room, shapes});
-  }, [shapes.length])
+  }, [shapes.length]);
 
-  // useEffect(() => {
-  //   if (room) {
-  //     socket.on("connect", () => {
-  //       console.log("connected")
-  //     });
-  //   }
+  useEffect(() => {
+    function onConnect() {
+      setIsConnected(true);
+      socket.emit("room", room);
+    }
 
-  //   return () => socket.on("disconnect", () => { console.log("disconnected") });
-  // }, []);
+    function onDisconnect() {
+      setIsConnected(false);
+    }
+
+    socket.on('connect', onConnect);
+    socket.on('disconnect', onDisconnect);
+    socket.on(room, setShapes);
+
+    return () => {
+      socket.off('connect', onConnect);
+      socket.off('disconnect', onDisconnect);
+      socket.off(room);
+    };
+  }, []);
+
+  useEffect(() => {
+    let ignore = false;
+    const intervalId = setInterval(() => {
+      const start = Date.now();
+
+      socket.emit("ping", () => {
+        const duration = Date.now() - start;
+        if (!ignore) {
+          setLatency(duration);
+        }
+      });
+    }, 1000);
+
+    return () => {
+      ignore = true;
+      clearInterval(intervalId);
+    }
+  }, []);
+
+  useEffect(() => {
+    setCanvasHeight(document.getElementById("canvas-row").offsetHeight);
+
+    window.addEventListener("resize", handleWindowResize);
+    return () => window.removeEventListener("resize", handleWindowResize);
+  }, [])
+
+  function handleWindowResize () {
+    const headerHeight = document.getElementById("header").offsetHeight;
+    const footerHeight = document.getElementById("footer").offsetHeight;
+    const newCanvasHeight = window.innerHeight - headerHeight - footerHeight;
+
+    setCanvasHeight(newCanvasHeight);
+  }
 
   return (
-    <div className="container-fluid">
-      <div className="row align-items-center justify-content-center" style={{ border: "solid red" }}>
+    <div className="container-fluid vh-100 d-flex flex-column">
+      <div id="header" className="row border-bottom border-secondary align-items-center justify-content-center">
         <div className="col">
           <Sharing room={room} onRoomChange={setRoom} />
         </div>
-        <div className="col border border-secondary">
+        <div className="col">
           <ToolPicker tool={currentTool} onToolSelect={setCurrentTool} />
         </div>
-        <div className="col border border-secondary">
+        <div className="col">
           <Eraser shapes={shapes} onClearAll={setShapes} onUndo={setShapes} onRedo={setShapes} />
         </div>
         <div className="col">
           <ColorPicker color={currentColor} onColorChange={setCurrentColor} />
         </div>
       </div>
-      <div className="row" style={{ height: "80vh", border: "solid pink" }}>
-        <div className="col" style={{ border: "solid green" }}>
-          <Canvas color={currentColor} tool={currentTool} shapes={shapes} onDraw={newShape => setShapes([...shapes, newShape])} />
+      <div id="canvas-row" className="row flex-grow-1">
+        <div  className="col">
+          <Canvas height={canvasHeight} width={window.innerWidth} color={currentColor} tool={currentTool} shapes={shapes} onDraw={newShape => setShapes([...shapes, newShape])} />
+        </div>
+      </div>
+      <div id="footer" className="row border-top border-secondary">
+        <div className="col d-flex align-items-center">
+          <NetworkStatus latency={latency} connected={isConnected} room={room} socket={socket}/>
         </div>
       </div>
     </div>

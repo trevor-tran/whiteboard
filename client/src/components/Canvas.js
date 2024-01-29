@@ -11,15 +11,21 @@ import {
 import { accordionSummaryClasses } from '@mui/material';
 
 
-function Canvas({ color, tool, onDraw, shapes }) {
-  const layerRef = useRef();
-  const isDrawing = useRef(false);
+function Canvas({ height, width, color, tool, onDraw, shapes }) {
   const [currentShape, setCurrentShape] = useState([])
 
+  const layerRef = useRef();
+  const isDrawing = useRef(false);
   const freePathSimplifier = useRef(null);
 
   useEffect(() => {
     paper.setup(layerRef.current);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   const handleMouseDown = (e) => {
@@ -101,8 +107,8 @@ function Canvas({ color, tool, onDraw, shapes }) {
   return (
     <Stage
       style={{ "cursor": "pointer" }}
-      width={window.innerWidth}
-      height={window.innerHeight}
+      width={width}
+      height={height}
       onMouseDown={handleMouseDown}
       onMousemove={handleMouseMove}
       onMouseup={handleMouseUp}
@@ -116,12 +122,6 @@ function Canvas({ color, tool, onDraw, shapes }) {
 };
 
 export default React.memo(Canvas);
-
-
-
-
-
-
 
 
 /**

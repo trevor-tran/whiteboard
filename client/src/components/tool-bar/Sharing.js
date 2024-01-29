@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import randomstring from 'randomstring';
 import { connection } from "../../utils/const";
+import {socket} from "../../utils/socket";
 
 import {
-  Button,
   Typography,
   Dialog,
   DialogActions,
@@ -14,7 +14,7 @@ import {
 //icons
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
-
+import CancelIcon from '@mui/icons-material/Cancel';
 
 function Sharing({ room, onRoomChange }) {
   const [roomValue, setRoomValue] = useState("");
@@ -27,7 +27,8 @@ function Sharing({ room, onRoomChange }) {
     const { roomNumberRule } = connection;
     let roomNumber = randomstring.generate({ length: roomNumberRule.ROOM_LENGTH, charset: roomNumberRule.CHARSET })
     onRoomChange(roomNumber);
-    setOpen(true)
+    setOpen(true);
+    socket.connect();
   }
 
   function handleRoomNumberDialog() {
@@ -38,6 +39,7 @@ function Sharing({ room, onRoomChange }) {
   function handleJoinRoom() {
     onRoomChange(roomValue.trim());
     closeDialog();
+    socket.connect();
   }
 
   function closeDialog() {
@@ -51,6 +53,7 @@ function Sharing({ room, onRoomChange }) {
         type="button"
         className="btn"
         title="Share your canvas"
+        disabled={room}
         onClick={handleGenerateRoom}>
         <ScreenShareIcon />
       </button>
@@ -58,28 +61,37 @@ function Sharing({ room, onRoomChange }) {
         type="button"
         className="btn"
         title="Join a canvas"
+        disabled={room}
         onClick={handleRoomNumberDialog}>
         <MeetingRoomIcon />
       </button>
+      <button
+        type="button"
+        className="btn"
+        title="Cancel"
+        disabled={!room}
+        onClick={() => {onRoomChange("")}}>
+        <CancelIcon color="error"/>
+      </button>
+      
 
 
       {/* a dialog display the generated room code when user clicks share button */}
       <Dialog open={open} onClose={closeDialog}>
-        <DialogTitle>{"Copy and share room number"}</DialogTitle>
+        <DialogTitle>
+          {isEnteringRoomNumber ? "Host's room number" : "Share your room"}
+        </DialogTitle>
         <DialogContent>
           {isEnteringRoomNumber ?
-            <>
-              <label htmlFor="room_code">Enter room code:</label>
-              <input name="room_code" value={roomValue} onChange={e => setRoomValue(e.target.value)}/>
-            </>
+            <input  className="form-control mt-1" name="room_code" value={roomValue} onChange={e => setRoomValue(e.target.value)}/>
             :
             <Typography gutterBottom>{room}</Typography>
           }
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDialog} color="primary"> Close </Button>
+          <button onClick={closeDialog} class="btn btn-secondary"> Close </button>
           { isEnteringRoomNumber ? 
-            <Button onClick={handleJoinRoom} color="primary"> OK </Button> :
+            <button onClick={handleJoinRoom} class="btn btn-primary"> OK </button> :
             null
           }
         </DialogActions>
