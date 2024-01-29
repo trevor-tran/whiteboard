@@ -23,7 +23,7 @@ export default function NetworkStatus({ latency, connected, room }) {
       {connected ?
         <>
           <p className="mx-4">Room: {room}</p>
-          <p className="mx-4">Ping: {latency}</p>
+          <p>Ping: {latency}</p>
         </> : null}
     </>
   )

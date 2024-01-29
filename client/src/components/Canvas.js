@@ -20,12 +20,6 @@ function Canvas({ height, width, color, tool, onDraw, shapes }) {
 
   useEffect(() => {
     paper.setup(layerRef.current);
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    }
   }, []);
 
   const handleMouseDown = (e) => {

@@ -9,13 +9,13 @@ import Eraser from './components/tool-bar/Eraser';
 
 import { shapeType, COLOR_LIST } from './utils/const';
 import {socket} from "./utils/socket";
-import NetworkStatus from './components/NetworkStatus';
+import NetworkStatus from './components/ConnectionStatus';
 
 function App() {
   const [currentColor, setCurrentColor] = useState(COLOR_LIST[0]);
   const [currentTool, setCurrentTool] = useState(shapeType.FREE_LINE);
   const [shapes, setShapes] = useState([]);
-  const [room, setRoom] = useState(null);
+  const [room, setRoom] = useState("");
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [canvasHeight, setCanvasHeight] = useState(0);
   const [latency, setLatency] = useState(0)
@@ -33,19 +33,24 @@ function App() {
 
     function onDisconnect() {
       setIsConnected(false);
+      setRoom("");
     }
+    if (!room) return;
 
+    console.log("subcribing....");
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
     socket.on(room, setShapes);
 
     return () => {
+      console.log("unsubcribing....");
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
       socket.off(room);
     };
-  }, []);
+  }, [room]);
 
+  // ping for latency
   useEffect(() => {
     let ignore = false;
     const intervalId = setInterval(() => {
@@ -66,8 +71,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setCanvasHeight(document.getElementById("canvas-row").offsetHeight);
-
+    setCanvasHeight(document.getElementById("canvas").offsetHeight);
     window.addEventListener("resize", handleWindowResize);
     return () => window.removeEventListener("resize", handleWindowResize);
   }, [])
@@ -80,11 +84,21 @@ function App() {
     setCanvasHeight(newCanvasHeight);
   }
 
+  function handleRoomChange(room) {
+    setRoom(room);
+
+    if (room) {
+      socket.connect()
+    } else {
+      socket.disconnect();
+    }
+  }
+
   return (
     <div className="container-fluid vh-100 d-flex flex-column">
       <div id="header" className="row border-bottom border-secondary align-items-center justify-content-center">
         <div className="col">
-          <Sharing room={room} onRoomChange={setRoom} />
+          <Sharing room={room} onRoomChange={handleRoomChange} />
         </div>
         <div className="col">
           <ToolPicker tool={currentTool} onToolSelect={setCurrentTool} />
@@ -96,7 +110,7 @@ function App() {
           <ColorPicker color={currentColor} onColorChange={setCurrentColor} />
         </div>
       </div>
-      <div id="canvas-row" className="row flex-grow-1">
+      <div id="canvas" className="row flex-grow-1">
         <div  className="col">
           <Canvas height={canvasHeight} width={window.innerWidth} color={currentColor} tool={currentTool} shapes={shapes} onDraw={newShape => setShapes([...shapes, newShape])} />
         </div>
