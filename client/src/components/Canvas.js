@@ -104,8 +104,11 @@ function Canvas({ height, width, color, tool, onDraw, shapes }) {
       width={width}
       height={height}
       onMouseDown={handleMouseDown}
-      onMousemove={handleMouseMove}
-      onMouseup={handleMouseUp}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onTouchStart={handleMouseDown}
+      onTouchMove={handleMouseMove}
+      onTouchEnd={handleMouseUp}
     >
       <Layer ref={layerRef}>
         {shapes.map((shape, i) => drawOnCanvas(shape, i))}

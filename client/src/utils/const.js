@@ -6,8 +6,8 @@ export const shapeType  = {
 }
 
 export const connection = {
-  // URL:"http://phuongtran.me/server" for deployment
-  serverURL:"http://localhost:8080",
+  prodURL:"https://trevortran.com/canvas/server",
+  devURL:"http://localhost:8080",
   roomNumberRule: {
     ROOM_LENGTH: 6,
     CHARSET: '0123456789'
