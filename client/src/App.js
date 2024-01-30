@@ -18,12 +18,26 @@ function App() {
   const [room, setRoom] = useState("");
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [canvasHeight, setCanvasHeight] = useState(0);
-  const [latency, setLatency] = useState(0)
+  const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
+  const [latency, setLatency] = useState(0);
+  const [isHost, setIsHost] = useState(false);
 
 
   useEffect(() => {
-    socket.emit("transmit", {room, shapes});
+    socket.emit("transmit", {
+      room, 
+      isHost, 
+      shapes,
+      canvas: {
+        width: canvasWidth, 
+        height: canvasHeight
+      }
+    });
   }, [shapes.length]);
+
+  useEffect(() => {
+    setCanvasWidth(window.innerWidth);
+  }, [window.innerWidth])
 
   useEffect(() => {
     function onConnect() {
@@ -40,7 +54,10 @@ function App() {
     console.log("subcribing....");
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
-    socket.on(room, setShapes);
+    
+    socket.on(room, data => {
+      setShapes(data.shapes);
+    });
 
     return () => {
       console.log("unsubcribing....");
@@ -71,7 +88,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    setCanvasHeight(document.getElementById("canvas").offsetHeight);
     window.addEventListener("resize", handleWindowResize);
     return () => window.removeEventListener("resize", handleWindowResize);
   }, [])
@@ -91,6 +107,7 @@ function App() {
       socket.connect()
     } else {
       socket.disconnect();
+      setIsHost(false);
     }
   }
 
@@ -98,7 +115,7 @@ function App() {
     <div className="container-fluid vh-100 d-flex flex-column">
       <div id="header" className="row border-bottom border-secondary align-items-center justify-content-center">
         <div className="col">
-          <Sharing room={room} onRoomChange={handleRoomChange} />
+          <Sharing room={room} onRoomChange={handleRoomChange} onHost={setIsHost}/>
         </div>
         <div className="col">
           <ToolPicker tool={currentTool} onToolSelect={setCurrentTool} />
@@ -112,7 +129,7 @@ function App() {
       </div>
       <div id="canvas" className="row flex-grow-1">
         <div  className="col">
-          <Canvas height={canvasHeight} width={window.innerWidth} color={currentColor} tool={currentTool} shapes={shapes} onDraw={newShape => setShapes([...shapes, newShape])} />
+          <Canvas height={canvasHeight} width={canvasWidth} color={currentColor} tool={currentTool} shapes={shapes} onDraw={newShape => setShapes([...shapes, newShape])} />
         </div>
       </div>
       <div id="footer" className="row border-top border-secondary">

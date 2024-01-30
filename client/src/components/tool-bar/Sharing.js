@@ -15,7 +15,7 @@ import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
 
-function Sharing({ room, onRoomChange }) {
+function Sharing({ room, onRoomChange, onHost }) {
   const [roomValue, setRoomValue] = useState("");
   const [isEnteringRoomNumber, setIsEnteringRoomNumber] = useState(false);
   const [open, setOpen] = useState(false);
@@ -26,6 +26,7 @@ function Sharing({ room, onRoomChange }) {
     let roomNumber = randomstring.generate({ length: roomNumberRule.ROOM_LENGTH, charset: roomNumberRule.CHARSET })
     onRoomChange(roomNumber);
     setOpen(true);
+    onHost(true);
   }
 
   function handleRoomNumberDialog() {
@@ -35,6 +36,7 @@ function Sharing({ room, onRoomChange }) {
 
   function handleJoinRoom() {
     onRoomChange(roomValue.trim());
+    onHost(false);
     closeDialog();
   }
 
