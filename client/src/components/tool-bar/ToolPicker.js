@@ -1,10 +1,10 @@
-import DrawIcon from '@mui/icons-material/Draw';
-import Crop75Icon from '@mui/icons-material/Crop75';
-import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
+import DrawIcon from "@mui/icons-material/Draw";
+import Crop75Icon from "@mui/icons-material/Crop75";
+import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 
 import "./ToolPicker.scss";
-import { shapeType } from '../../utils/const';
+import { shapeType } from "../../utils/const";
 
 export default function Tool({ tool, onToolSelect }) {
   function handleToolClick(e) {
@@ -18,46 +18,44 @@ export default function Tool({ tool, onToolSelect }) {
       <button
         value={shapeType.FREE_LINE}
         type="button"
-        className="btn"
+        className={"btn " + (tool === shapeType.FREE_LINE ? "btn-secondary" : null)}
         data-toggle="tooltip"
         data-placement="bottom"
         title="Pen"
-        onClick={handleToolClick}
-      ><DrawIcon />
+        onClick={handleToolClick}>
+        <DrawIcon />
       </button>
 
       <button
         value={shapeType.RECT}
         type="button"
-        className="btn"
+        className={"btn " + (tool === shapeType.RECT ? "btn-secondary" : null)}
         data-toggle="tooltip"
         data-placement="bottom"
         title="Rectangle"
-        onClick={handleToolClick}
-      >
+        onClick={handleToolClick}>
         <Crop75Icon />
       </button>
 
       <button
         value={shapeType.CIRCLE}
-        type="button" className="btn"
+        type="button"
+        className={"btn " + (tool === shapeType.CIRCLE ? "btn-secondary" : null)}
         data-toggle="tooltip"
         data-placement="bottom"
         title="Circle"
-        onClick={handleToolClick}
-      >
+        onClick={handleToolClick}>
         <CircleOutlinedIcon />
       </button>
 
       <button
         value={shapeType.LINE}
         type="button"
-        className="btn"
+        className= {"btn " + (tool === shapeType.LINE ? "btn-secondary" : null)}
         data-toggle="tooltip"
         data-placement="bottom"
         title="Line"
-        onClick={handleToolClick}
-      >
+        onClick={handleToolClick}>
         <HorizontalRuleIcon />
       </button>
     </div>
