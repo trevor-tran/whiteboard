@@ -16,15 +16,12 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-  socket.on("room", roomNumber => {
-    roomNumber && socket.join(roomNumber);
+  socket.on('join', roomNumber => {
+    roomNumber && socket.join(roomNumber.toString());
   });
-
   socket.on('transmit', data => {
-    // todo: use room instead to limit
-    // # of sockets received msg
-    // io.to(conn.room).emit(conn.shapes);
-    console.log(data)
+    // todo: fix broacast to a specific room
+    // data.room && socket.to(data.room).emit(data);
     socket.broadcast.emit(data.room, data);
   });
 
