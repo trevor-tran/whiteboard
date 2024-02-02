@@ -38,6 +38,15 @@ function App() {
   const [latency, setLatency] = useState(0);
   const [isHost, setIsHost] = useState(sessionIsHost || false);
 
+  const data = {
+    room,
+    isHost,
+    shapes,
+    canvas: {
+      width: canvasWidth,
+      height: canvasHeight
+    }
+  };
 
   // detect canvas's changes and save to session storage
   useEffect(() => {
@@ -49,15 +58,7 @@ function App() {
   useEffect(() => {
     if (!isConnected) return;
 
-    const data = {
-      room,
-      isHost,
-      shapes,
-      canvas: {
-        width: canvasWidth,
-        height: canvasHeight
-      }
-    };
+
     socket.emit("transmit", data);
   }, [shapes.length]);
 
@@ -147,17 +148,20 @@ function App() {
 
   return (
     <div className="container-fluid vh-100 d-flex flex-column">
-      <div id="header" className="row border-bottom border-secondary align-items-center justify-content-center">
-        <div className="col">
+      <div id="header" className="row border-bottom align-items-center justify-content-center">
+        <div className="col-auto d-flex p-0">
           <Sharing room={room} onRoomChange={handleRoomChange} onHost={setIsHost} />
+          <div className="vr mx-3 my-auto" style={{height: "30px"}}></div>
         </div>
-        <div className="col">
+        <div className="col-auto d-flex p-0">
           <ToolPicker tool={tool} onToolSelect={setTool} />
+          <div className="vr mx-3 my-auto" style={{height: "30px"}}></div>
         </div>
-        <div className="col">
+        <div className="col-auto d-flex d-flex">
           <Eraser shapes={shapes} onClearAll={setShapes} onUndo={setShapes} onRedo={setShapes} />
+          <div className="vr mx-3 my-auto" style={{height: "30px"}}></div>
         </div>
-        <div className="col">
+        <div className="col-auto">
           <ColorPicker color={color} onColorChange={setColor} />
         </div>
       </div>
@@ -166,8 +170,8 @@ function App() {
           <Canvas height={canvasHeight} width={canvasWidth} color={color} tool={tool} shapes={shapes} onDraw={newShape => setShapes([...shapes, newShape])} />
         </div>
       </div>
-      <div id="footer" className="row border-top border-secondary">
-        <div className="col d-flex align-items-center">
+      <div id="footer" className="row border-top">
+        <div className="col d-flex">
           <NetworkStatus latency={latency} connected={isConnected} room={room} socket={socket} />
         </div>
       </div>
