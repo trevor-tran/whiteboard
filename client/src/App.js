@@ -12,14 +12,14 @@ import { socket } from "./utils/socket";
 import NetworkStatus from './components/ConnectionStatus';
 
 // get most recent canvas state if any
-let sessionColor;
-let sessionTool;
-let sessionShapes;
-let sessionRoom;
-let sessionIsHost;
-if (sessionStorage.getItem("canvas")) {
-  const sessionData = JSON.parse(sessionStorage.getItem("canvas"));
-  const { color, tool, shapes, room, isConnected, isHost } = sessionData;
+let sessionColor = COLOR_LIST[0];
+let sessionTool = shapeType.FREE_LINE;
+let sessionShapes = [];
+let sessionRoom = "";
+let sessionIsHost = false;
+const sessionData = sessionStorage.getItem("canvas");
+if (sessionData) {
+  const { color, tool, shapes, room, isHost } = JSON.parse(sessionData);
   sessionColor = color;
   sessionTool = tool;
   sessionShapes = shapes;
@@ -28,17 +28,17 @@ if (sessionStorage.getItem("canvas")) {
 }
 
 function App() {
-  const [color, setColor] = useState(sessionColor || COLOR_LIST[0]);
-  const [tool, setTool] = useState(sessionTool || shapeType.FREE_LINE);
-  const [shapes, setShapes] = useState(sessionShapes || []);
-  const [room, setRoom] = useState(sessionRoom || "");
+  const [color, setColor] = useState(sessionColor);
+  const [tool, setTool] = useState(sessionTool);
+  const [shapes, setShapes] = useState(sessionShapes);
+  const [room, setRoom] = useState(sessionRoom);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [canvasHeight, setCanvasHeight] = useState(0);
   const [canvasWidth, setCanvasWidth] = useState(window.innerWidth);
   const [latency, setLatency] = useState(0);
-  const [isHost, setIsHost] = useState(sessionIsHost || false);
+  const [isHost, setIsHost] = useState(sessionIsHost);
 
-  const data = {
+  const canvasData = {
     room,
     isHost,
     shapes,
@@ -47,7 +47,6 @@ function App() {
       height: canvasHeight
     }
   };
-
   // detect canvas's changes and save to session storage
   useEffect(() => {
     const localSesion = { color, tool, shapes, room, isHost };
@@ -57,9 +56,7 @@ function App() {
   // emit
   useEffect(() => {
     if (!isConnected) return;
-
-
-    socket.emit("transmit", data);
+    socket.emit("transmit", canvasData);
   }, [shapes.length]);
 
   useEffect(() => {
@@ -70,26 +67,26 @@ function App() {
     if (!room) return;
 
     function onConnect() {
-      socket.emit("transmit", data);
       setIsConnected(true);
       socket.emit('join', room);
+
+      socket.on(room, data => {
+        setShapes(data.shapes);
+      });
     }
-  
+
     function onDisconnect() {
       setIsConnected(false);
       setRoom("");
+      socket.off(room);
     }
-  
+
     socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
 
-    socket.on(room, data => {
-      setShapes(data.shapes);
-    });
     return () => {
       socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
-      socket.off(room);
     };
   }, [room]);
 
@@ -98,7 +95,7 @@ function App() {
     if (room) {
       socket.connect();
     }
-  }, [])
+  }, []);
 
   // ping for latency
   useEffect(() => {
@@ -126,7 +123,7 @@ function App() {
     return () => window.removeEventListener("resize", handleWindowResize);
   }, [])
 
-  
+
   function handleWindowResize() {
     const headerHeight = document.getElementById("header").offsetHeight;
     const footerHeight = document.getElementById("footer").offsetHeight;
