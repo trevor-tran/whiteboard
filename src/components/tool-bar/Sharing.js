@@ -59,7 +59,7 @@ function Sharing({ room, onRoomChange, onHost }) {
         title="Share your canvas"
         disabled={room}
         onClick={handleGenerateRoom}>
-        <ScreenShareIcon />
+        <ScreenShareIcon /> Share
       </button>
       <button
         type="button"
@@ -67,7 +67,7 @@ function Sharing({ room, onRoomChange, onHost }) {
         title="Join a canvas"
         disabled={room}
         onClick={handleDisplayRoomInput}>
-        <LoginIcon />
+        <LoginIcon /> Join
       </button>
       <button
         type="button"
@@ -75,7 +75,7 @@ function Sharing({ room, onRoomChange, onHost }) {
         title="Leave"
         disabled={!room}
         onClick={() => onRoomChange("")}>
-        <LogoutIcon color="error" />
+        <LogoutIcon color="error" /> Leave
       </button>
 
       {showJoinModal ?

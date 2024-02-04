@@ -37,7 +37,7 @@ export default function Eraser({shapes, onClearAll, onUndo, onRedo}) {
         className="btn"
         data-toggle="tooltip"
         data-placement="bottom"
-        title="Clear Canvas"
+        title="Undo"
         disabled={shapes.length === 0}
         onClick={handleUndoClick}>
         <UndoIcon />
@@ -48,7 +48,7 @@ export default function Eraser({shapes, onClearAll, onUndo, onRedo}) {
         className="btn"
         data-toggle="tooltip"
         data-placement="bottom"
-        title="Clear Canvas"
+        title="Redo"
         disabled={undoShapes.length === 0}
         onClick={handleRedoClick}>
         <RedoIcon />
@@ -58,7 +58,7 @@ export default function Eraser({shapes, onClearAll, onUndo, onRedo}) {
         className="btn"
         data-toggle="tooltip"
         data-placement="bottom"
-        title="Clear Canvas"
+        title="Clear All"
         onClick={handleClearAll}>
         <DeleteForeverIcon color="error"/>
       </button>
