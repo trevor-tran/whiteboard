@@ -3,7 +3,7 @@ import Crop75Icon from "@mui/icons-material/Crop75";
 import CircleOutlinedIcon from "@mui/icons-material/CircleOutlined";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 
-import "./ToolPicker.scss";
+import "./Styles.scss";
 import { shapeType } from "../../utils/const";
 
 export default function Tool({ tool, onToolSelect }) {

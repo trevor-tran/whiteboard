@@ -12,13 +12,13 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 import Modal from '../Modal';
 
-import "./Sharing.scss";
+import "./Styles.scss";
 
 const WARNING = "WARNING: your current sketches may be lost when other guests start drawing";
 
 function Sharing({ room, onRoomChange, onHost }) {
   const [roomValue, setRoomValue] = useState("");
-  const [joinRoom, setJoinRoom] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
   const [open, setOpen] = useState(false);
 
   // generate and update room code in global state
@@ -31,19 +31,20 @@ function Sharing({ room, onRoomChange, onHost }) {
   }
 
   function handleDisplayRoomInput() {
-    setJoinRoom(true);
+    setShowJoinModal(true);
     setOpen(true);
   }
 
   function handleJoinRoom() {
     onRoomChange(roomValue.trim());
     onHost(false);
-    closeDialog();
+    closeModal();
   }
 
-  function closeDialog(e) {
+  function closeModal(e) {
     setOpen(false);
-    setJoinRoom(false);
+    setShowJoinModal(false);
+    setRoomValue("");
   }
 
   function onCopy() {
@@ -77,11 +78,11 @@ function Sharing({ room, onRoomChange, onHost }) {
         <LogoutIcon color="error" />
       </button>
 
-      {joinRoom ?
+      {showJoinModal ?
         <Modal
           key="share-room"
           open={open}
-          onClose={closeDialog}
+          onClose={closeModal}
           onOk={handleJoinRoom}
           title="Join Canvas">
           <div className="d-flex align-items-center mb-4">
@@ -102,8 +103,8 @@ function Sharing({ room, onRoomChange, onHost }) {
         <Modal
           key="join-room"
           open={open}
-          onClose={closeDialog}
-          onOk={closeDialog}
+          onClose={closeModal}
+          onOk={closeModal}
           title={"Share canvas"}>
           <Typography variant="subtitle1">Copy and share the below room number:</Typography>
           <div>
