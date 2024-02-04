@@ -2,22 +2,23 @@ import { useState } from 'react'
 import randomstring from 'randomstring';
 import { connection } from "../../utils/const";
 
-import {
-  Typography,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle
-} from '@mui/material';
+import { Typography, IconButton } from '@mui/material';
 
 //icons
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+
+import Modal from '../Modal';
+
+import "./Sharing.scss";
+
+const WARNING = "WARNING: your current sketches may be lost when other guests start drawing";
 
 function Sharing({ room, onRoomChange, onHost }) {
   const [roomValue, setRoomValue] = useState("");
-  const [isEnteringRoomNumber, setIsEnteringRoomNumber] = useState(false);
+  const [joinRoom, setJoinRoom] = useState(false);
   const [open, setOpen] = useState(false);
 
   // generate and update room code in global state
@@ -29,8 +30,8 @@ function Sharing({ room, onRoomChange, onHost }) {
     onHost(true);
   }
 
-  function handleRoomNumberDialog() {
-    setIsEnteringRoomNumber(true);
+  function handleDisplayRoomInput() {
+    setJoinRoom(true);
     setOpen(true);
   }
 
@@ -40,9 +41,13 @@ function Sharing({ room, onRoomChange, onHost }) {
     closeDialog();
   }
 
-  function closeDialog() {
+  function closeDialog(e) {
     setOpen(false);
-    setIsEnteringRoomNumber(false);
+    setJoinRoom(false);
+  }
+
+  function onCopy() {
+    navigator.clipboard.writeText(room);
   }
 
   return (
@@ -60,7 +65,7 @@ function Sharing({ room, onRoomChange, onHost }) {
         className="btn"
         title="Join a canvas"
         disabled={room}
-        onClick={handleRoomNumberDialog}>
+        onClick={handleDisplayRoomInput}>
         <LoginIcon />
       </button>
       <button
@@ -72,29 +77,50 @@ function Sharing({ room, onRoomChange, onHost }) {
         <LogoutIcon color="error" />
       </button>
 
-
-
-      {/* a dialog display the generated room code when user clicks share button */}
-      <Dialog open={open} onClose={closeDialog}>
-        <DialogTitle>
-          {isEnteringRoomNumber ? "Host's room number" : "Share your room"}
-        </DialogTitle>
-        <DialogContent>
-          {isEnteringRoomNumber ?
-            <input className="form-control mt-1" name="room_code" value={roomValue} onChange={e => setRoomValue(e.target.value)} />
-            :
-            <Typography gutterBottom>{room}</Typography>
-          }
-        </DialogContent>
-        <DialogActions>
-          <button onClick={closeDialog} className="btn btn-secondary"> Close </button>
-          {isEnteringRoomNumber ?
-            <button onClick={handleJoinRoom} className="btn btn-primary"> OK </button> :
-            null
-          }
-        </DialogActions>
-      </Dialog>
-    </div>
+      {joinRoom ?
+        <Modal
+          key="share-room"
+          open={open}
+          onClose={closeDialog}
+          onOk={handleJoinRoom}
+          title="Join Canvas">
+          <div className="d-flex align-items-center mb-4">
+            <label htmlFor="room_input">Room number: </label>
+            <input
+              type="number"
+              className="form-control mt-1"
+              style={{width: "200px", height: "2rem", "marginLeft" : "20px"}}
+              name="room_input"
+              value={roomValue}
+              onChange={e => setRoomValue(e.target.value)}
+              autoFocus
+            />
+          </div>
+          <Typography variant="body2" sx={{ fontStyle: 'oblique' }}>{WARNING}</Typography>
+        </Modal>
+        :
+        <Modal
+          key="join-room"
+          open={open}
+          onClose={closeDialog}
+          onOk={closeDialog}
+          title={"Share canvas"}>
+          <Typography variant="subtitle1">Copy and share the below room number:</Typography>
+          <div>
+            <Typography variant="overline">{room}</Typography>
+            <IconButton
+              aria-label="copy"
+              onClick={onCopy}
+              sx={{
+                cursor: "pointer"
+              }}>
+              <ContentCopyIcon fontSize="small" />
+            </IconButton>
+          </div>
+          <Typography variant="body2" sx={{ fontStyle: 'oblique' }}>{WARNING}</Typography>
+        </Modal>
+      }
+    </div >
   )
 }
 
